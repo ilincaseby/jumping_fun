@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { blockWorkerWebGL } from './scene-fixtures';
 
 test('demo routes remain readable, noindex and free of active contact destinations', async ({ page }) => {
   for (const route of ['/', '/tobogane/', '/galerie/', '/informatii/', '/oferta/', '/confidentialitate/']) {
@@ -104,7 +105,7 @@ test('reduced motion and save-data keep the poster without downloading the scene
     if (saveData) await context.addInitScript(() => Object.defineProperty(navigator, 'connection', { value: { saveData: true } }));
     const page = await context.newPage();
     const sceneRequests: string[] = [];
-    page.on('request', (r) => { if (/\/scene\.[^/]+\.js/.test(r.url())) sceneRequests.push(r.url()); });
+    page.on('request', (r) => { if (/\/scene[.-][^/]+\.js/.test(r.url())) sceneRequests.push(r.url()); });
     await page.goto('http://127.0.0.1:4322/');
     await expect(page.locator('[data-slide-scene]')).toHaveAttribute('data-scene-state', 'poster');
     await expect(page.locator('.scene-poster')).toBeVisible();
@@ -115,14 +116,7 @@ test('reduced motion and save-data keep the poster without downloading the scene
 });
 
 test('WebGL failure displays an explicit static fallback without blocking the CTA', async ({ page }) => {
-  await page.addInitScript(() => {
-    const original = HTMLCanvasElement.prototype.getContext;
-    Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
-      value: function (this: HTMLCanvasElement, type: string, ...args: unknown[]) {
-        return type.includes('webgl') ? null : Reflect.apply(original, this, [type, ...args]);
-      },
-    });
-  });
+  await blockWorkerWebGL(page);
   await page.goto('/');
   await expect(page.locator('[data-slide-scene]')).toHaveAttribute('data-scene-state', 'error');
   await expect(page.locator('[data-scene-status]')).toContainText('nu s-a putut încărca');
@@ -133,6 +127,7 @@ test('scene is real geometry, settles, respects budgets, and is absent on other 
   await page.goto('/');
   const scene = page.locator('[data-slide-scene]');
   await expect(scene).toHaveAttribute('data-scene-state', 'ready');
+  await expect(scene).toHaveAttribute('data-renderer', 'worker');
   await expect(page.locator('canvas')).toHaveAttribute('data-settled', 'true', { timeout: 10_000 });
   expect(Number(await scene.getAttribute('data-triangles'))).toBeLessThanOrEqual(25000);
   expect(Number(await scene.getAttribute('data-draw-calls'))).toBeLessThanOrEqual(20);
@@ -140,7 +135,7 @@ test('scene is real geometry, settles, respects budgets, and is absent on other 
   const requests: string[] = [];
   page.on('request', (r) => requests.push(r.url()));
   await page.goto('/galerie/');
-  expect(requests.some((url) => /\/scene\.[^/]+\.js/.test(url))).toBe(false);
+  expect(requests.some((url) => /\/scene[.-][^/]+\.js/.test(url))).toBe(false);
   await expect(page.locator('canvas')).toHaveCount(0);
 });
 

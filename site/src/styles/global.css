@@ -94,9 +94,7 @@ p { line-height: 1.6; overflow-wrap: anywhere; }
 .scene[data-scene-state="ready"] .scene-canvas { opacity: 1; }
 .scene[data-scene-state="ready"] .scene-poster { opacity: 0; }
 .scene-poster { transition: opacity 160ms ease; }
-.scene-controls { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; justify-content: center; min-height: 2.75rem; }
 .scene-status { text-align: center; max-width: 36rem; margin-inline: auto; font-size: .75rem; color: var(--color-muted); }
-.scene-toggle { border: 1px solid #6c8497; border-radius: 999px; padding: .55rem .85rem; display: inline-flex; gap: .5rem; align-items: center; background: rgb(255 255 255 / .75); min-height: 2.75rem; font-size: .75rem; }
 .page-heading { padding-top: 2rem; display: flex; justify-content: space-between; gap: 1rem 3rem; align-items: end; }
 .page-heading h1 { font-size: clamp(2.25rem, 4vw, 3.5rem); }
 .page-heading p { max-width: 29rem; color: var(--color-muted); }
@@ -212,7 +210,6 @@ p { line-height: 1.6; overflow-wrap: anywhere; }
   .hero-copy > .caption { font-size: .75rem; }
   .scene { max-width: 25rem; margin-top: .5rem; }
   .scene-stage { aspect-ratio: 1.4; }
-  .scene-controls { gap: .25rem .75rem; }
   .scene-status { font-size: .6875rem; max-width: 19rem; }
   .page-heading { padding-top: 1.25rem; flex-direction: column; align-items: start; gap: .75rem; }
   .page-heading h1 { font-size: 2.5rem; }

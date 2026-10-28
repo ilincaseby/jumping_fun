@@ -11,7 +11,9 @@
     "status": "local-demo-implemented-and-validated",
     "previewUrl": "http://127.0.0.1:4327/",
     "unitTestsPassed": 12,
-    "browserTestsPassed": 15,
+    "browserTestsPassed": 18,
+    "sceneRenderer": "browser-worker-offscreen-canvas",
+    "sceneMotion": "one-time drop, squash and two diminishing rebounds; no pointer rotation",
     "deployed": false,
     "hardwareValidationPending": true
   },

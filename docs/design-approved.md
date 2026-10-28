@@ -36,3 +36,7 @@ Figma v02 rămâne parțială și nu a trecut verificarea finală din cauza cote
 - `noindex` și verificare de prepublicare care refuză demo, câmpuri obligatorii lipsă și drepturi media neconfirmate.
 - Fără deploy sau publicare. Proiectul ISI și sursele skill-urilor nu se modifică.
 - Aceasta este aprobare pentru implementarea direcției, nu aprobare juridică, de performanță sau de lansare.
+
+## Revizie de motion autorizată ulterior
+
+La 28 octombrie 2026, utilizatorul a cerut explicit optimizarea animației 3D, eliminarea mișcării stânga/dreapta și păstrarea căderii și a salturilor de început. Implementarea păstrează modelul original, cu două reveniri mici, fără rotație după mouse. Randarea este izolată într-un worker al browserului; aceasta nu introduce un backend Cloudflare și nu schimbă autorizația de publicare.

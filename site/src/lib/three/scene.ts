@@ -1,27 +1,22 @@
 import {
-  CanvasTexture, Color, DirectionalLight, Group, HemisphereLight, Mesh, MeshBasicMaterial,
+  CanvasTexture, Color, DirectionalLight, HemisphereLight, Mesh, MeshBasicMaterial,
   OrthographicCamera, PlaneGeometry, Scene, SRGBColorSpace, WebGLRenderer,
 } from 'three';
 import { createInflatable } from './model';
 import { createLanding, stepLanding } from '../../scripts/motion/landing';
-
-export interface SceneController {
-  pause(): void;
-  resume(): void;
-  dispose(): void;
-}
+import type { SceneController, SceneMetrics, SceneSize } from './scene-protocol';
 
 interface SceneOptions {
   entrance: boolean;
-  onState: (state: 'ready' | 'lost' | 'restored') => void;
-  onMetrics: (metrics: { triangles: number; drawCalls: number; pixelRatio: number }) => void;
+  size: SceneSize;
+  onState(state: 'ready' | 'lost' | 'restored'): void;
+  onMetrics(metrics: SceneMetrics): void;
+  onSettled(): void;
+  onError(error: unknown): void;
 }
 
-export function createScene(canvas: HTMLCanvasElement, options: SceneOptions): SceneController {
-  const stage = canvas.parentElement;
-  if (!stage) throw new Error('Containerul scenei lipsește.');
+export async function createScene(canvas: OffscreenCanvas, options: SceneOptions): Promise<SceneController> {
   const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = SRGBColorSpace;
   const scene = new Scene();
@@ -36,17 +31,13 @@ export function createScene(canvas: HTMLCanvasElement, options: SceneOptions): S
   fill.position.set(5, 3, -5);
   scene.add(fill);
   const model = createInflatable();
-  const pivot = new Group();
-  pivot.add(model.group);
-  scene.add(pivot);
-  const shadowCanvas = document.createElement('canvas');
-  shadowCanvas.width = 128;
-  shadowCanvas.height = 128;
+  scene.add(model.group);
+  const shadowCanvas = new OffscreenCanvas(128, 128);
   const context = shadowCanvas.getContext('2d');
   if (!context) {
     model.dispose();
     renderer.dispose();
-    throw new Error('Nu se poate crea posterul de umbră al scenei.');
+    throw new Error('Nu se poate crea umbra procedurală a scenei.');
   }
   const gradient = context.createRadialGradient(64, 64, 12, 64, 64, 64);
   gradient.addColorStop(0, 'rgba(18,49,75,0.28)');
@@ -64,80 +55,105 @@ export function createScene(canvas: HTMLCanvasElement, options: SceneOptions): S
   let landing = createLanding(options.entrance);
   let frame = 0;
   let lastTime = 0;
-  let paused = false;
+  let paused = true;
   let disposed = false;
   let lost = false;
-  let firstFrame = true;
-  let targetYaw = 0;
-  let resizePending = false;
+  let ready = false;
+  let announcedSettled = false;
+  let restoring = false;
+  let renderCount = 0;
+  let pendingSize = options.size;
+  let appliedSize: SceneSize | undefined;
   const abort = new AbortController();
-  const draw = (time: number) => {
-    frame = 0;
-    if (paused || disposed || lost) return;
-    const dt = lastTime ? Math.min((time - lastTime) / 1000, 1 / 30) : 1 / 60;
-    lastTime = time;
-    landing = stepLanding(landing, dt);
-    model.group.position.y = landing.height;
-    const spread = 1 / Math.sqrt(landing.compression);
-    model.group.scale.set(spread, landing.compression, spread);
-    pivot.rotation.y += (targetYaw - pivot.rotation.y) * (1 - Math.exp(-10 * dt));
-    shadowMaterial.opacity = Math.max(.3, 1 - landing.height * .18);
-    shadow.scale.setScalar(1 + landing.height * .07);
-    renderer.render(scene, camera);
-    if (firstFrame) {
-      firstFrame = false;
-      options.onState('ready');
-    }
-    options.onMetrics({ triangles: renderer.info.render.triangles, drawCalls: renderer.info.render.calls, pixelRatio: renderer.getPixelRatio() });
-    if (!landing.settled || Math.abs(targetYaw - pivot.rotation.y) > .0005) requestDraw();
-    else canvas.dataset.settled = 'true';
-  };
-  function requestDraw() {
-    if (!frame && !paused && !disposed && !lost) frame = requestAnimationFrame(draw);
-  }
-  const resize = () => {
-    if (paused) { resizePending = true; return; }
-    const { width, height } = stage.getBoundingClientRect();
-    if (!width || !height || disposed) return;
+  const applySize = () => {
+    if (appliedSize?.width === pendingSize.width && appliedSize.height === pendingSize.height && appliedSize.pixelRatio === pendingSize.pixelRatio) return;
     const vertical = 6.8;
-    const horizontal = vertical * width / height;
+    const horizontal = vertical * pendingSize.width / pendingSize.height;
     camera.left = -horizontal / 2;
     camera.right = horizontal / 2;
     camera.top = vertical / 2;
     camera.bottom = -vertical / 2;
     camera.updateProjectionMatrix();
-    renderer.setSize(width, height, false);
-    resizePending = false;
-    requestDraw();
+    renderer.setPixelRatio(Math.min(pendingSize.pixelRatio, 1.5));
+    renderer.setSize(pendingSize.width, pendingSize.height, false);
+    appliedSize = { ...pendingSize };
   };
-  const resizeObserver = new ResizeObserver(resize);
-  resizeObserver.observe(stage);
-  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
-  stage.addEventListener('pointermove', (event) => {
-    if (!finePointer.matches || !landing.settled) return;
-    const bounds = stage.getBoundingClientRect();
-    targetYaw = ((event.clientX - bounds.left) / bounds.width - .5) * .28;
-    requestDraw();
-  }, { signal: abort.signal });
-  stage.addEventListener('pointerleave', () => { targetYaw = 0; requestDraw(); }, { signal: abort.signal });
+  const draw = (time: number) => {
+    frame = 0;
+    if (paused || disposed || lost) return;
+    try {
+      applySize();
+      let remaining = lastTime ? Math.min((time - lastTime) / 1000, .1) : 1 / 60;
+      lastTime = time;
+      while (remaining > 0 && !landing.settled) {
+        const dt = Math.min(remaining, 1 / 60);
+        landing = stepLanding(landing, dt);
+        remaining -= dt;
+      }
+      model.group.position.y = landing.height;
+      const spread = 1 / Math.sqrt(landing.compression);
+      model.group.scale.set(spread, landing.compression, spread);
+      shadowMaterial.opacity = Math.max(.3, 1 - landing.height * .18);
+      shadow.scale.setScalar(1 + landing.height * .07);
+      renderer.render(scene, camera);
+      renderCount++;
+      if (!ready || restoring) {
+        options.onState(restoring ? 'restored' : 'ready');
+        restoring = false;
+      }
+      if (!ready || landing.settled) {
+        options.onMetrics({ triangles: renderer.info.render.triangles, drawCalls: renderer.info.render.calls, pixelRatio: renderer.getPixelRatio(), renderCount });
+      }
+      ready = true;
+      if (!landing.settled) requestDraw();
+      else if (!announcedSettled) {
+        announcedSettled = true;
+        options.onSettled();
+      }
+    } catch (error) {
+      options.onError(error);
+    }
+  };
+  function requestDraw() {
+    if (!frame && !paused && !disposed && !lost) frame = requestAnimationFrame(draw);
+  }
+  const dispose = () => {
+    if (disposed) return;
+    disposed = true;
+    cancelAnimationFrame(frame);
+    abort.abort();
+    model.dispose();
+    shadowGeometry.dispose();
+    shadowMaterial.dispose();
+    shadowTexture.dispose();
+    renderer.dispose();
+    renderer.forceContextLoss();
+    scene.clear();
+  };
   canvas.addEventListener('webglcontextlost', (event) => {
     event.preventDefault();
     if (disposed) return;
     lost = true;
     cancelAnimationFrame(frame);
     frame = 0;
-    console.warn('Contextul WebGL s-a pierdut; este afișat posterul static.');
     options.onState('lost');
   }, { signal: abort.signal });
   canvas.addEventListener('webglcontextrestored', () => {
     if (disposed) return;
     lost = false;
+    restoring = true;
+    announcedSettled = false;
     landing = createLanding(false);
     lastTime = 0;
-    options.onState('restored');
     requestDraw();
   }, { signal: abort.signal });
-  resize();
+  try {
+    applySize();
+    await renderer.compileAsync(scene, camera);
+  } catch (error) {
+    dispose();
+    throw error;
+  }
   return {
     pause() {
       paused = true;
@@ -146,25 +162,16 @@ export function createScene(canvas: HTMLCanvasElement, options: SceneOptions): S
       lastTime = 0;
     },
     resume() {
-      if (disposed || lost) return;
+      if (disposed || !paused) return;
       paused = false;
       lastTime = 0;
-      if (resizePending) resize();
       requestDraw();
     },
-    dispose() {
-      if (disposed) return;
-      disposed = true;
-      cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
-      abort.abort();
-      model.dispose();
-      shadowGeometry.dispose();
-      shadowMaterial.dispose();
-      shadowTexture.dispose();
-      renderer.dispose();
-      renderer.forceContextLoss();
-      scene.clear();
+    resize(size) {
+      if (disposed || size.width <= 0 || size.height <= 0) return;
+      pendingSize = size;
+      if (!paused) requestDraw();
     },
+    dispose,
   };
 }

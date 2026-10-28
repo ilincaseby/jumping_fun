@@ -98,10 +98,10 @@
     "figmaRepresentation":"Original editable 2D perspective illustration, not a render from an existing mesh",
     "figmaComponent":"3:4",
     "reconstruction3d":"original-procedural-geometry-not-photo-reconstruction",
-    "implementationSources":["../site/src/lib/three/spec.ts","../site/src/lib/three/model.ts","../site/src/lib/three/scene.ts"],
+    "implementationSources":["../site/src/lib/three/spec.ts","../site/src/lib/three/model.ts","../site/src/lib/three/scene.ts","../site/src/lib/three/scene.worker.ts","../site/src/lib/three/scene-controller.ts"],
     "posterSource":"../site/src/assets/scene/slide-poster.png",
     "posterProvenance":"Rendered locally from the implemented original model with scripts/capture-poster.ts; optimized by Astro into responsive WebP.",
-    "measuredScene":{"renderedTriangles":14250,"drawCalls":9,"maxDpr":1.5,"sceneChunkGzipBytes":137854,"largestPosterWebpBytes":84344},
+    "measuredScene":{"renderer":"browser-worker-offscreen-canvas","renderedTriangles":14250,"drawCalls":9,"maxDpr":1.5,"sceneChunkGzipBytes":138418,"controllerGzipBytes":1021,"largestPosterWebpBytes":84344},
     "textures":"plain-procedural-colors-only",
     "restrictions":"Fără personaje, sigle, pixeli proiectați din fotografii sau afirmația că modelul se închiriază."
   }
