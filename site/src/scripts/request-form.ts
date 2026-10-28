@@ -1,19 +1,15 @@
 import { business } from '../config/business';
 import { findProduct } from '../content/catalog';
-import { localDate, requestMessage, validateRequest, type RequestValues } from '../lib/request';
+import { localDate, whatsappRequestUrl, validateRequest, type RequestValues } from '../lib/request';
 
 const form = document.querySelector<HTMLFormElement>('[data-request-form]');
 if (form) {
   const summary = document.querySelector<HTMLElement>('[data-error-summary]');
-  const panel = document.querySelector<HTMLElement>('[data-preview-panel]');
-  const message = document.querySelector<HTMLElement>('[data-preview-text]');
-  const submit = form.querySelector<HTMLButtonElement>('[data-preview-button]');
-  const copy = document.querySelector<HTMLButtonElement>('[data-copy]');
-  const edit = document.querySelector<HTMLButtonElement>('[data-edit]');
-  const copyStatus = document.querySelector<HTMLElement>('[data-copy-status]');
+  const submit = form.querySelector<HTMLButtonElement>('[data-whatsapp-button]');
+  const status = form.querySelector<HTMLElement>('[data-whatsapp-status]');
   const model = form.querySelector<HTMLSelectElement>('#model');
   const date = form.querySelector<HTMLInputElement>('#date');
-  if (!summary || !panel || !message || !submit || !copy || !edit || !copyStatus || !model || !date) {
+  if (!summary || !submit || !status || !model || !date) {
     throw new Error('Structura formularului este incompletă.');
   }
   const queryModel = new URLSearchParams(location.search).get('model');
@@ -38,7 +34,7 @@ if (form) {
       const value = data.get(key);
       return typeof value === 'string' ? value : '';
     };
-    return { model: read('model'), date: read('date'), locality: read('locality'), details: read('details') };
+    return { model: read('model'), date: read('date'), locality: read('locality'), children: read('children'), details: read('details') };
   };
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -46,7 +42,8 @@ if (form) {
     const errors = validateRequest(data);
     const list = summary.querySelector('ul')!;
     list.replaceChildren();
-    for (const key of ['model', 'date', 'locality', 'details'] as const) {
+    status.textContent = '';
+    for (const key of ['model', 'date', 'locality', 'children', 'details'] as const) {
       const field = form.elements.namedItem(key);
       const error = document.getElementById(`${key}-error`);
       if (!error || !(field instanceof HTMLElement)) throw new Error(`Câmp lipsă: ${key}`);
@@ -66,28 +63,16 @@ if (form) {
     summary.hidden = Object.keys(errors).length === 0;
     if (!summary.hidden) {
       summary.querySelector('p')!.textContent = 'Mai avem câteva detalii de corectat.';
-      panel.hidden = true;
       summary.focus();
       return;
     }
-    message.textContent = requestMessage(business, data);
-    copyStatus.textContent = '';
-    panel.hidden = false;
-    panel.focus();
-  });
-  form.addEventListener('input', () => { panel.hidden = true; });
-  edit.addEventListener('click', () => {
-    panel.hidden = true;
-    model.focus();
-  });
-  copy.addEventListener('click', async () => {
     try {
-      if (!navigator.clipboard) throw new Error('Clipboard API indisponibil.');
-      await navigator.clipboard.writeText(message.textContent ?? '');
-      copyStatus.textContent = 'Mesaj copiat. Nu a fost trimis.';
+      const url = whatsappRequestUrl(business, data);
+      status.textContent = 'Se deschide WhatsApp. Mesajul nu a fost trimis automat.';
+      window.location.assign(url);
     } catch (error) {
-      console.warn('Copierea mesajului nu a reușit.', error);
-      copyStatus.textContent = 'Copierea automată nu este disponibilă. Poți selecta și copia manual textul de mai sus.';
+      console.error('WhatsApp nu s-a putut deschide.', error);
+      status.textContent = 'WhatsApp nu s-a putut deschide. Folosește contactul direct de mai jos sau încearcă din nou.';
     }
   });
 }

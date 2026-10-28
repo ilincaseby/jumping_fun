@@ -8,10 +8,10 @@
   "approved": true,
   "implementation": {
     "directory": "jumping_fun/site",
-    "status": "local-demo-implemented-and-validated",
+    "status": "public-facing-ui-verified-contacts-pending-legal-details",
     "previewUrl": "http://127.0.0.1:4327/",
-    "unitTestsPassed": 12,
-    "browserTestsPassed": 18,
+    "unitTestsPassed": 16,
+    "browserTestsPassed": 19,
     "sceneRenderer": "browser-worker-offscreen-canvas",
     "sceneMotion": "one-time drop, squash and two diminishing rebounds; no pointer rotation",
     "deployed": false,

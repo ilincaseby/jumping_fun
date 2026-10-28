@@ -40,3 +40,11 @@ Figma v02 rămâne parțială și nu a trecut verificarea finală din cauza cote
 ## Revizie de motion autorizată ulterior
 
 La 28 octombrie 2026, utilizatorul a cerut explicit optimizarea animației 3D, eliminarea mișcării stânga/dreapta și păstrarea căderii și a salturilor de început. Implementarea păstrează modelul original, cu două reveniri mici, fără rotație după mouse. Randarea este izolată într-un worker al browserului; aceasta nu introduce un backend Cloudflare și nu schimbă autorizația de publicare.
+
+## Date comerciale, fotografii și contact confirmate ulterior
+
+Utilizatorul a furnizat noile denumiri, dimensiunile și vârstele celor șapte modele și a confirmat că dimensiunile sunt în metri. A confirmat telefonul/WhatsApp `+40 767 850 085`, formularul cu deschidere WhatsApp și câmpul opțional „Număr de copii”, validat ca întreg pozitiv.
+
+A cerut eliminarea etichetelor publice demo/preview și a e-mailului demonstrativ, înlocuirea fotografiei XXXL cu cea pe fond alb și adăugarea fotografiilor suplimentare. A confirmat utilizarea comercială și acordurile pentru persoanele recognoscibile, inclusiv acordurile părinților/reprezentanților legali.
+
+Datele juridice și domeniul vor fi completate ulterior. Durata tarifelor se confirmă în ofertă; nu se introduce „pe zi”. Interfața poate folosi contactele verificate, dar noindex și verificarea de lansare rămân până la completarea datelor. Adăugarea SAL/ANPC și a paginilor informative nu este o certificare juridică și nu autorizează deploy-ul.

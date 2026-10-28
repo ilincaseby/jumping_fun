@@ -103,15 +103,19 @@ test('changing motion preferences during worker startup never hides the poster p
 test('maximum accepted request text and absent optional values do not overflow', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto('/oferta/');
+  await page.route('https://wa.me/**', (route) => route.fulfill({ status: 200, contentType: 'text/plain', body: 'Intercepted WhatsApp draft.' }));
   await page.locator('#date').fill('2099-12-10');
   const locality = 'București — sectorul 3, locație de eveniment cu acces separat; amplasarea exactă va fi confirmată împreună înainte de stabilirea ofertei.';
   const details = Array(12).fill('Avem nevoie să discutăm amplasarea, accesul și intervalul orar. Vă rugăm să confirmați detaliile înainte de închiriere.').join('\n').slice(0, 1500);
   await page.locator('#locality').fill(locality);
   await page.locator('#details').fill(details);
-  await page.getByRole('button', { name: 'Previzualizează cererea' }).click();
-  await expect(page.locator('[data-preview-panel]')).toBeVisible();
-  await expect(page.locator('[data-preview-text]')).toContainText('un tobogan potrivit');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole('button', { name: 'Continuă pe WhatsApp' }).click();
+  await page.waitForURL('https://wa.me/40767850085?**');
+  const draft = new URL(page.url()).searchParams.get('text');
+  expect(draft).toContain('un tobogan potrivit');
+  expect(draft).not.toContain('Număr de copii');
+  expect(draft).toContain(details);
 });
 
 test('capture the final static and interactive layouts at required widths', async ({ page }) => {
@@ -124,6 +128,10 @@ test('capture the final static and interactive layouts at required widths', asyn
       await page.evaluate(() => document.fonts.ready);
       if (route === '/') await expect(page.locator('canvas')).toHaveAttribute('data-settled', 'true');
       if (route === '/tobogane/') await expect(page.locator('[data-carousel]')).toHaveAttribute('data-selected', 'casa');
+      await page.evaluate(() => {
+        if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+        window.scrollTo(0, 0);
+      });
       await page.screenshot({ path: path.join(directory, `${name}-${width}.png`), fullPage: true });
     }
   }

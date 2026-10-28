@@ -1,18 +1,25 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import LegalDetails from '../components/LegalDetails.astro';
 import { business } from '../config/business';
+import { contactLinks } from '../lib/business';
+const contacts = contactLinks(business);
 ---
-<SiteLayout title="Date și confidențialitate" description="Cum funcționează previzualizarea locală și ce trebuie completat înainte de publicare." surface="paper">
+<SiteLayout title="Date și confidențialitate" description="Cum sunt folosite informațiile din formular și ce se întâmplă când continui conversația pe WhatsApp." surface="paper">
   <article class="prose">
     <h1>Date și confidențialitate.</h1>
-    <h2>O demonstrație, nu un formular de trimitere</h2>
-    <p>În această versiune, datele introduse pregătesc un mesaj numai în memoria paginii din browser. Nu există un endpoint de trimitere, cont de utilizator sau salvare a formularului în localStorage.</p>
-    <p>Butonul de copiere folosește clipboard-ul numai la cererea ta. Nu adăuga date personale despre copii.</p>
-    <h2>Fără servicii externe de analiză</h2>
-    <p>Nu am integrat analytics, pixeli publicitari sau încorporări social media. Fonturile, imaginile și codul sunt servite local de aplicație. Serverul pe care va fi găzduit site-ul poate avea propriile jurnale; acestea trebuie documentate înainte de lansare.</p>
-    <h2>Identitate de completat</h2>
-    <p>{business.legal.name}. {business.contact.email} este {business.status === 'demo' ? 'o adresă demonstrativă, inactivă' : 'adresa de contact configurată'}.</p>
-    <p>Acest text descrie demo-ul și nu constituie o garanție de conformitate juridică. Datele operatorului, temeiurile și procedurile aplicabile trebuie verificate înainte de publicare.</p>
+    <h2>Formularul și WhatsApp</h2>
+    <p>Formularul folosește modelul ales, data, localitatea, numărul opțional de copii și detaliile introduse pentru a compune un mesaj în browser. Nu există un endpoint al site-ului care să primească formularul și nu salvăm conținutul acestuia în localStorage.</p>
+    <p>Când alegi „Continuă pe WhatsApp”, browserul navighează la serviciul WhatsApp cu mesajul inclus în link. Din acel moment, datele sunt transmise către WhatsApp/Meta și se aplică regulile serviciului. Site-ul nu trimite mesajul automat către {business.brand}; verificarea și expedierea sunt făcute de tine în WhatsApp.</p>
+    <p>Nu include nume, fotografii sau alte date personale despre copii în câmpul de detalii. Numărul de copii este doar o estimare pentru eveniment.</p>
+    <p><a href="https://www.whatsapp.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Politica de confidențialitate WhatsApp</a></p>
+    <h2>Cookie-uri și servicii externe</h2>
+    <p>Aplicația nu setează cookie-uri de analiză sau publicitate și nu include pixeli publicitari ori încorporări social media. Fonturile, imaginile și codul sunt servite de site. Găzduirea poate genera jurnale tehnice, iar paginile externe deschise prin linkuri au propriile reguli.</p>
+    <h2>Fotografii</h2>
+    <p>Fotografiile au fost furnizate pentru prezentarea echipamentelor și a activităților. Pentru întrebări privind o imagine sau pentru solicitări despre datele personale, folosește contactul de mai jos.</p>
+    <h2>Contact</h2>
+    <p>{business.brand}{contacts.phone && <> — <a href={contacts.phone}>{business.contact.phone}</a></>}.</p>
+    <LegalDetails />
     <a class="button secondary mt-6" href="/oferta/">Înapoi la cerere</a>
   </article>
 </SiteLayout>

@@ -223,3 +223,15 @@ Implementarea locală este în [site/](../site/), cu [ghid de utilizare și veri
 Au existat costuri de cold start și frame-uri lente în profilul software; nu prezentăm măsurătorile ca performanță garantată pe telefon. Rămân de verificat pe hardware: Safari/iOS, Android, GPU, gesture feel, safe areas, tastatura virtuală și zoom-ul real. Drepturile terțe, condițiile comerciale și datele juridice rămân de confirmat înainte de lansare.
 
 Preview local: `http://127.0.0.1:4327/`. **Nu s-a făcut deploy.**
+
+## Actualizare confirmată de utilizator — catalog, galerie și WhatsApp
+
+În seara de 28 octombrie 2026, utilizatorul a furnizat denumirile finale, dimensiunile (L × l × h, în metri), vârstele și prețurile. Aceste date înlocuiesc incertitudinile de transcriere din fișele inițiale; sursa curentă este [catalog.ts](../site/src/content/catalog.ts). Nu se afirmă durata „pe zi”.
+
+Au fost inspectate toate cele 25 de fișiere suplimentare. Imaginea albă XXXL înlocuiește fotografia de catalog; celelalte 24 completează galeria, care păstrează și cele 3 fotografii existente. Galeria are 27 de imagini, paginate static câte 9. Asocierea legendelor a fost verificată pe o planșă cu numele fișierelor. [Manifestul suplimentar](./additional-media-manifest.json) înregistrează proveniența și confirmarea explicită a utilizării comerciale și a acordurilor pentru persoanele recognoscibile.
+
+Telefonul și WhatsApp sunt confirmate în configurația unică. Formularul compune un mesaj cu model/data/localitate, numărul opțional de copii și detalii, apoi deschide linkul oficial `wa.me`. Nu există trimitere automată, e-mail sau backend de formular. Navigarea externă este interceptată în teste, fără solicitări reale către WhatsApp.
+
+Interfața nu mai afișează etichete demo/preview sau date fictive de firmă. Datele juridice, domeniul și condițiile comerciale complete rămân de completat; `check:release` le raportează explicit, iar indexarea rămâne blocată.
+
+Resurse pentru consumatori verificate: [pagina SAL actuală ANPC](https://www.anpc.ro/sal), [portalul SAL](https://reclamatiisal.anpc.ro/) și [pictograma online oferită de ANPC](https://www.anpc.ro/download/sal/SAL-PICTOGRAMA.png). Footer-ul include această pictogramă și link ANPC. Nu s-a adăugat vechiul badge SOL: [Comisia Europeană confirmă închiderea ODR la 20 iulie 2025](https://consumer-redress.ec.europa.eu/site-relocation_en). Paginile de confidențialitate și condiții descriu fluxul actual și informațiile confirmate, fără garanție de conformitate juridică integrală.

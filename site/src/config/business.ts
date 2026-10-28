@@ -2,7 +2,7 @@ export interface BusinessConfig {
   readonly status: 'demo' | 'verified';
   readonly brand: string;
   readonly legal: {
-    readonly name: string;
+    readonly name: string | null;
     readonly taxId: string | null;
     readonly registrationNumber: string | null;
     readonly registeredAddress: string | null;
@@ -11,7 +11,7 @@ export interface BusinessConfig {
   readonly contact: {
     readonly phone: string | null;
     readonly whatsapp: string | null;
-    readonly email: string;
+    readonly email: string | null;
     readonly verified: boolean;
   };
   readonly social: ReadonlyArray<{ readonly name: string; readonly url: string | null }>;
@@ -22,21 +22,23 @@ export interface BusinessConfig {
   readonly missingFields: readonly string[];
 }
 
+const phone = '+40 767 850 085';
+
 export const business: BusinessConfig = {
-  status: 'demo',
+  status: 'verified',
   brand: 'Jumping Fun',
   legal: {
-    name: 'DEMO — firmă de completat',
+    name: null,
     taxId: null,
     registrationNumber: null,
     registeredAddress: null,
     correspondenceAddress: null,
   },
   contact: {
-    phone: null,
-    whatsapp: null,
-    email: 'contact@example.com',
-    verified: false,
+    phone,
+    whatsapp: phone,
+    email: null,
+    verified: true,
   },
   social: [
     { name: 'Instagram', url: 'https://www.instagram.com/jumpingfuntobogane/' },
@@ -49,10 +51,8 @@ export const business: BusinessConfig = {
   commercialTermsVerified: false,
   missingFields: [
     'Date juridice',
-    'Destinații de contact verificate',
     'Domeniu',
     'Durata tarifelor și serviciile incluse',
     'Condiții de transport, montaj și utilizare',
-    'Verificarea drepturilor terțe din imagini',
   ],
 };

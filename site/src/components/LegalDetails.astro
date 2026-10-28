@@ -1,0 +1,13 @@
+---
+import { business } from '../config/business';
+const fields = [
+  ['Denumire juridică', business.legal.name],
+  ['CUI/CIF', business.legal.taxId],
+  ['Registrul comerțului', business.legal.registrationNumber],
+  ['Sediu', business.legal.registeredAddress],
+  ['Adresă de corespondență', business.legal.correspondenceAddress],
+].filter(([, value]) => value);
+---
+{fields.length > 0 && <dl class="legal-details">
+  {fields.map(([label, value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
+</dl>}

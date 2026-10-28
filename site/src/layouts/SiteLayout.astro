@@ -3,12 +3,16 @@ import '@fontsource-variable/fredoka';
 import '@fontsource-variable/dm-sans';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import { business } from '../config/business';
 import { businessStructuredData } from '../lib/business';
+import { publicationIssues } from '../lib/publication';
+import { publicationMediaRights } from '../content/publication-media';
 interface Props { title: string; description: string; active?: string; surface?: 'sky' | 'paper' }
 const { title, description, active, surface = 'sky' } = Astro.props;
 const canonical = business.siteUrl ? new URL(Astro.url.pathname, business.siteUrl).href : null;
 const structuredData = businessStructuredData(business);
+const readyForPublication = publicationIssues(business, publicationMediaRights).length === 0;
 ---
 <!doctype html>
 <html lang="ro">
@@ -18,7 +22,7 @@ const structuredData = businessStructuredData(business);
     <meta name="theme-color" content="#E5F4FF" />
     <meta name="color-scheme" content="light" />
     <meta name="description" content={description} />
-    <meta name="robots" content={business.status === 'demo' ? 'noindex, nofollow' : 'index, follow'} />
+    <meta name="robots" content={readyForPublication ? 'index, follow' : 'noindex, nofollow'} />
     <title>{title} — {business.brand}</title>
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:title" content={`${title} — ${business.brand}`} />
@@ -33,10 +37,7 @@ const structuredData = businessStructuredData(business);
     <a class="skip-link" href="#continut">Sari la conținut</a>
     <Header active={active} />
     <main id="continut" tabindex="-1"><slot /></main>
-    <footer class="site-footer page-width">
-      <p>{business.status === 'demo' ? 'Demo: cererile nu se trimit și nu rezervă automat.' : business.brand}</p>
-      <a href="/confidentialitate/">Date și confidențialitate</a>
-    </footer>
+    <Footer />
     <script>
       import '../scripts/media-fallback';
     </script>

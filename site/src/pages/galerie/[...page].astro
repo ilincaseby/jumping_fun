@@ -1,0 +1,50 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { GetStaticPaths, Page } from 'astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { galleryMedia } from '../../content/media';
+export const getStaticPaths = (({ paginate }) => paginate(galleryMedia, { pageSize: 9 })) satisfies GetStaticPaths;
+interface Props { page: Page<(typeof galleryMedia)[number]> }
+const { page } = Astro.props;
+const photos = await Promise.all(page.data.map(async (media) => ({
+  ...media,
+  full: await getImage({ src: media.image, width: Math.min(1600, media.image.width), format: 'webp', quality: 85 }),
+})));
+---
+<SiteLayout title={page.currentPage === 1 ? 'Din poze, în lumea lor' : `Galerie — pagina ${page.currentPage}`} description="Toboganele noastre în imagini: modele, detalii și momente de la joacă, în interior și în aer liber." active="/galerie/" surface="paper">
+  <section class="page-width" aria-labelledby="gallery-title">
+    <div class="page-heading">
+      <h1 id="gallery-title">Din poze,<br />în lumea lor.</h1>
+      <p>Toboganele noastre, în mijlocul distracției. Deschide fotografiile pentru detalii.</p>
+    </div>
+    <div class="gallery-grid">
+      {photos.map((photo, index) => (
+        <figure>
+          <a class="gallery-link" href={photo.full.src} data-gallery-image data-alt={photo.alt} data-caption={photo.caption} data-width={photo.image.width} data-height={photo.image.height} data-media aria-label={`Mărește fotografia: ${photo.caption}`}>
+            <Image src={photo.image} alt={photo.alt} widths={[240, 480, 720, 960]} sizes="(max-width: 700px) calc((100vw - 64px) / 2), (max-width: 1050px) calc((100vw - 96px) / 3), 410px" width={720} format="webp" quality={80} loading={index < 2 ? 'eager' : 'lazy'} />
+            <span class="expand-icon"><Icon name="expand" size={18} /></span>
+            <span class="media-error">Fotografie indisponibilă.</span>
+          </a>
+          <figcaption class="caption">{photo.caption}</figcaption>
+        </figure>
+      ))}
+    </div>
+    <nav class="gallery-pagination" aria-label="Pagini galerie">
+      {page.url.prev && <a class="gummy-link" href={page.url.prev} rel="prev"><Icon name="arrow-left" /> Înapoi</a>}
+      <p class="caption">Fotografiile {page.start + 1}–{page.end + 1} din {page.total}</p>
+      {page.url.next && <a class="gummy-link" href={page.url.next} rel="next">Mai multe fotografii <Icon name="arrow-right" /></a>}
+    </nav>
+  </section>
+  <dialog class="lightbox" aria-labelledby="lightbox-caption">
+    <div class="dialog-toolbar">
+      <p id="lightbox-caption"></p>
+      <button class="icon-button" type="button" data-close aria-label="Închide fotografia"><Icon name="close" /></button>
+    </div>
+    <img data-full-image src={photos[0].full.src} alt={photos[0].alt} width="1600" height="1200" loading="lazy" />
+    <p class="field-error" data-lightbox-error role="status" hidden>Fotografia nu s-a putut încărca. Închide și încearcă din nou.</p>
+  </dialog>
+  <script>
+    import '../../scripts/gallery';
+  </script>
+</SiteLayout>

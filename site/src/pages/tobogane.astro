@@ -3,10 +3,10 @@ import { Image } from 'astro:assets';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import ModelPicker from '../components/ModelPicker.astro';
 import Icon from '../components/Icon.astro';
-import { catalog, defaultProduct, formatPrice, priceDisclaimer } from '../content/catalog';
+import { catalog, defaultProduct, formatPrice, formatDimension, formatAges, priceDisclaimer } from '../content/catalog';
 import { productMedia } from '../content/media';
 ---
-<SiteLayout title="Alege locul lor de joacă" description="Explorează cele șapte modele documentate, vezi imaginile și pregătește cererea de ofertă." active="/tobogane/">
+<SiteLayout title="Alege locul lor de joacă" description="Tobogane gonflabile de închiriat: fotografii, prețuri, dimensiuni și vârste. Cere disponibilitatea pe WhatsApp." active="/tobogane/">
   <section class="catalog" aria-labelledby="catalog-title">
     <div class="page-width">
       <div class="page-heading">
@@ -24,14 +24,19 @@ import { productMedia } from '../content/media';
             return (
               <article class="product-slide" id={`model-${product.id}`} data-product={product.id} aria-label={`${index + 1} din ${catalog.length}: ${product.name}`}>
                 <div class="product-card">
-                  <div class="product-media" data-media data-kind={product.id === 'patrula' ? 'photo' : 'catalog'}>
+                  <div class="product-media" data-media data-kind="catalog">
                     <Image src={media.image} alt={media.alt} widths={[320, 640, 960]} sizes="(max-width: 700px) 76vw, 460px" width={960} format="webp" quality={82} loading={product.id === defaultProduct ? 'eager' : 'lazy'} />
                     <p class="media-error" role="status">Fotografia nu este disponibilă. Poți cere detalii despre acest model.</p>
                   </div>
                   <div class="product-copy">
                     <h2>{product.name}</h2>
                     <p class="product-price">{formatPrice(product.price)}</p>
-                    <p class="product-note">Tarif în material, nu preț total.</p>
+                    <dl class="product-specs" aria-label="Dimensiunile echipamentului">
+                      <div><dt>Lungime</dt><dd>{formatDimension(product.dimensions.length)}</dd></div>
+                      <div><dt>Lățime</dt><dd>{formatDimension(product.dimensions.width)}</dd></div>
+                      <div><dt>Înălțime</dt><dd>{formatDimension(product.dimensions.height)}</dd></div>
+                    </dl>
+                    <p class="product-age">Vârstă: <strong>{formatAges(product.ages)}</strong></p>
                     <a class="button" href={`/oferta/?model=${product.id}`}>Cere o ofertă <Icon name="arrow-right" size={18} /></a>
                   </div>
                 </div>

@@ -4,9 +4,10 @@ export function installRequestFixtures(form: HTMLFormElement) {
   const future = new Date();
   future.setFullYear(future.getFullYear() + 1);
   const fixtures: Record<string, RequestValues> = {
-    demo: { model: 'casa', date: localDate(future), locality: 'București', details: '' },
+    demo: { model: 'casa', date: localDate(future), locality: 'București', children: '12', details: '' },
     worst: {
       model: '',
+      children: '',
       date: localDate(future),
       locality: 'București — sectorul 3, locație de eveniment cu acces separat; amplasarea exactă va fi confirmată împreună înainte de stabilirea ofertei.',
       details: [
@@ -16,7 +17,7 @@ export function installRequestFixtures(form: HTMLFormElement) {
         ...Array<string>(12).fill('Locul este în curs de stabilire. Vom confirma detaliile de amplasare și acces înainte de acceptarea ofertei.'),
       ].join('\n').slice(0, 1500),
     },
-    empty: { model: '', date: '', locality: '', details: '' },
+    empty: { model: '', date: '', locality: '', children: '', details: '' },
   };
   const toolbar = document.createElement('div');
   toolbar.setAttribute('aria-label', 'Fixture-uri de dezvoltare');

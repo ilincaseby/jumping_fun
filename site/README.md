@@ -1,6 +1,6 @@
-# Jumping Fun — preview v02
+# Jumping Fun
 
-Site în română, static Astro + TypeScript + Tailwind CSS 4. Fără React, SSR, analytics, backend de trimitere sau deploy.
+Site în română, static Astro + TypeScript + Tailwind CSS 4. Formularul deschide WhatsApp cu un mesaj precompletat. Fără React, SSR, analytics sau backend de trimitere.
 
 Direcția v02 a fost aprobată explicit: [decizia și referințele Figma](../docs/design-approved.md). Figma este parțială; implementarea completează rutele și interacțiunile discutate.
 
@@ -22,7 +22,7 @@ npm run build
 npm run preview -- --host 127.0.0.1 --port 4327
 ```
 
-Preview: `http://127.0.0.1:4327`. Rute: `/`, `/tobogane/`, `/galerie/`, `/informatii/`, `/oferta/`, `/confidentialitate/`.
+Preview local: `http://127.0.0.1:4327`. Rute: `/`, `/tobogane/`, `/galerie/` (și paginile 2/3), `/informatii/`, `/oferta/`, `/confidentialitate/`, `/conditii-inchiriere/`.
 
 ### Comanda de build pentru Cloudflare
 
@@ -42,7 +42,7 @@ npx wrangler deploy --name jumping-fun --assets ./site/dist
 
 Cu Root directory `site`, calea devine `--assets ./dist`. Flag-urile sunt documentate în [Wrangler deploy](https://developers.cloudflare.com/workers/wrangler/commands/workers/#deploy). Acestea sunt instrucțiuni pentru configurarea utilizatorului, nu comenzi executate în această sesiune.
 
-Comanda construiește demo-ul. Pentru lansarea finală folosește verificarea `build:release`, care refuză datele incomplete. `noindex` nu este control de acces: un preview public rămâne accesibil prin URL. Nu s-a executat un deploy din această sesiune.
+Comanda construiește site-ul în starea curentă. Pentru lansarea finală folosește verificarea `build:release`, care refuză datele incomplete. `noindex` nu este control de acces: un site public rămâne accesibil prin URL. Nu s-a executat un deploy din această sesiune.
 
 ## Unde modific datele
 
@@ -50,15 +50,18 @@ Comanda construiește demo-ul. Pentru lansarea finală folosește verificarea `b
 
 Brandul, identitatea juridică, telefonul, WhatsApp, e-mailul, URL-ul, rețelele sociale, zona și programul sunt importate din acest fișier. Header-ul, SEO, textul ofertei, zona deservită și paginile de contact folosesc aceeași configurație.
 
-- `status: 'demo'`: toate paginile sunt `noindex, nofollow`; robots exclude indexarea.
-- Contactele sunt inactive până la `status: 'verified'` **și** `contact.verified: true`.
+- Telefonul și WhatsApp au fost confirmate de utilizator și sunt active; ambele folosesc aceeași constantă `phone`.
+- `status: 'verified'` nu este suficient pentru lansare: `publicationIssues()` verifică separat datele juridice, domeniul, condițiile comerciale și drepturile media. Cât timp există lipsuri, paginile rămân `noindex, nofollow`, iar robots exclude indexarea.
+- Contactele sunt inactive pentru configurații neverificate. E-mailul este `null` și nu se afișează; formularul nu folosește e-mail.
 - Lipsurile sunt `null` sau enumerate în `missingFields`, nu înlocuite cu identificatori fiscali/numere inventate.
 - JSON-LD nu se emite pentru business demo sau cu date obligatorii lipsă.
 - Nu pune secrete/API keys în configurație: este conținut public.
 
-Catalogul este separat în [src/content/catalog.ts](./src/content/catalog.ts). Tarifele sunt transcrise din materiale; nu implică `/zi`, transport, montaj sau disponibilitate. Nu sunt inventate capacități sau limite de siguranță.
+Catalogul este separat în [src/content/catalog.ts](./src/content/catalog.ts). Denumirile, prețurile, dimensiunile în metri (lungime/lățime/înălțime) și vârstele au fost confirmate direct de utilizator la 28 octombrie 2026. Nu se afișează `/zi`; durata, transportul și serviciile incluse se confirmă în ofertă. Numărul de copii din formular nu reprezintă o capacitate simultană admisă.
 
-Formularul pregătește mesajul **doar în memoria paginii**. Nu există cerere POST, trimitere, rezervare sau salvare a formularului în localStorage. Copierea este inițiată explicit de utilizator și are feedback separat de trimitere.
+Formularul compune local un mesaj cu modelul, data, localitatea, numărul opțional de copii și detaliile. „Continuă pe WhatsApp” deschide `https://wa.me/...` cu textul codificat în URL; WhatsApp decide deschiderea aplicației sau a paginii web, în funcție de dispozitiv. **Mesajul nu se trimite automat**. Nu există POST către un backend al site-ului, rezervare automată sau salvare a formularului în localStorage. Din momentul navigării, textul ajunge la WhatsApp/Meta, lucru explicat în pagina de confidențialitate.
+
+Numărul de copii este opțional; dacă este completat, trebuie să fie un întreg pozitiv reprezentabil sigur, fără un plafon comercial inventat.
 
 ## Fotografii și drepturi
 
@@ -66,10 +69,14 @@ Formularul pregătește mesajul **doar în memoria paginii**. Nu există cerere 
 - Asocierea, alt text și sursa: [src/content/media.ts](./src/content/media.ts).
 - Drepturile folosite inclusiv de verificarea de lansare: [src/content/publication-media.ts](./src/content/publication-media.ts).
 - Proveniența completă și filtrele aplicate copiilor: [manifestul media](../docs/media-manifest.json).
+- Fotografii noi și consimțăminte: [additional-media-manifest.json](../docs/additional-media-manifest.json).
+- Ordinea și legendele celor 24 de fotografii noi: [gallery-sources.ts](./src/content/gallery-sources.ts).
 
 Astro generează WebP și variante responsive la build. Originalele furnizate nu sunt modificate. Copiile curățate elimină antetele/prețurile din margini; cotele suprapuse pe produs și însemnele rămân. Nu s-au folosit generări externe sau fotografii stock.
 
-Permisiunea proprietarului este documentată, dar drepturile terțe asupra personajelor/mărcilor din materiale trebuie clarificate înainte de lansare. `thirdPartyCleared` rămâne `false` până atunci.
+Utilizatorul a confirmat explicit utilizarea comercială și acordurile părinților/reprezentanților legali pentru persoanele recognoscibile. Drepturile fișierelor curente sunt marcate ca aprobate pe baza acestei declarații, nu a unui audit juridic independent. Nu extinde automat acordul la materiale adăugate ulterior.
+
+Galeria include 24 de fotografii noi și cele 3 existente, cu paginare statică de câte 9, funcțională și fără JS. Imaginea XXXL din catalog este copia pe fundal alb; fotografia veche rămâne în galerie.
 
 Pentru a înlocui o fotografie: adaugă fișierul, schimbă importul și alt text-ul din modulul media, actualizează proveniența și drepturile, apoi reconstruiește. Nu hotlink-ui URL-uri temporare.
 
@@ -104,6 +111,8 @@ Fonturile Fredoka și DM Sans sunt self-hosted; copiile licențelor SIL OFL sunt
 
 Catalogul folosește **Embla**, doar pe ruta sa, pentru drag, momentum și întrerupere. CSS gestionează suprafața gummy-glass; centrul rămâne clar. Există selecție directă, butoane și tastatură. Fără autoplay. Reduced-transparency/contrast crescut produc suprafețe opace. Fără JS există o listă orizontală nativă cu scroll-snap și ancore.
 
+Homepage-ul nu dublează selectorul celor șapte modele; acesta rămâne în catalog. „Vezi catalogul” este CTA-ul principal galben, cu două pulsuri de luminozitate de câte 2 secunde, prin opacitatea unui strat CSS. Animația se încheie singură, este pusă în pauză la focus/hover/press (nu repornită de la zero) și este dezactivată pentru reduced-motion, reduced-transparency sau contrast crescut. „Cere o ofertă” rămâne vizibil și pe mobil. Nu s-a adăugat o nouă scenă 3D sau o bibliotecă de animație.
+
 ## Verificare
 
 ```sh
@@ -114,9 +123,9 @@ npm run test:e2e
 npm run check:release
 ```
 
-Ultima comandă **trebuie să eșueze în demo**. Testele Playwright pornesc și opresc propriul preview pe `127.0.0.1:4322`. Dacă browserul lipsește, instalează-l cu `npx playwright install chromium`.
+Ultima comandă **trebuie încă să eșueze** deoarece datele juridice, domeniul și condițiile comerciale complete nu au fost furnizate. Testele Playwright pornesc propriul server; portul implicit este 4322. Dacă este ocupat de alt proiect, folosește `PLAYWRIGHT_PORT=4326 npm run test:e2e`, fără să oprești serviciul celuilalt proiect. Dacă browserul lipsește, instalează-l cu `npx playwright install chromium`.
 
-Testele acoperă configurația, blocarea publicării, prețurile documentate, date invalide, previzualizarea fără trimitere, geometria/aterizarea, rutarea, swipe/tastatură, dialogul galeriei, FAQ, lipsa JS, reduced-motion/save-data, lipsa WebGL, pierderea contextului, încărcări eșuate și dimensiunile 1440/768/390/320.
+Testele acoperă configurația, blocarea publicării, valorile exacte din catalog, validarea opțională a numărului de copii, URL-ul WhatsApp și codificarea textului, paginarea galeriei, geometria/aterizarea, rutarea, swipe/tastatură, dialogul galeriei, FAQ, lipsa JS, reduced-motion/save-data, lipsa WebGL, încărcări eșuate și dimensiunile 1440/768/390/320. Navigarea WhatsApp este interceptată în teste: nu se face nicio solicitare reală către acel serviciu și nu se trimite niciun mesaj.
 
 Capturile implementării sunt scrise în [docs/previews/implementation](../docs/previews/implementation/) de testul vizual. Planul standalone din [.tsupgrader/runtime-validation/eval-plan.json](./.tsupgrader/runtime-validation/eval-plan.json) reia comenzile proiectului; nu creează un workflow de upgrade.
 
@@ -124,7 +133,7 @@ Capturile implementării sunt scrise în [docs/previews/implementation](../docs/
 
 În `npm run dev`, `/oferta/?data=worst` afișează comutatorul **Demo data / Worst case / Empty**. Fixture-urile intră prin câmpurile reale: model opțional absent, localitate lungă, detalii la limita de 1.500 de caractere, diacritice, Unicode și text HTML literal. Nu sunt incluse în build-ul de producție.
 
-Modelul este un enum cu 7 valori; data este validată calendaristic; localitatea are limita 140; detaliile 1.500. Nu există liste de 1.000 de produse în acest catalog fix. Lipsa fotografiilor și a WebGL este verificată separat prin teste.
+Modelul este un enum cu 7 valori; data este validată calendaristic; localitatea are limita 140; detaliile 1.500; numărul de copii este opțional și întreg pozitiv. Fixture-urile se folosesc numai în dezvoltare; nu apăsa butonul WhatsApp cu date de test într-un browser neinterceptat.
 
 ### Ce nu dovedesc testele automate
 
@@ -133,6 +142,8 @@ Chromium pe macOS cu WebGL software și viewport emulat nu demonstrează fluidit
 Testele includ și zoom vizual 2× prin CDP, separat de mărirea fontului; acesta nu înlocuiește verificarea manuală a zoom-ului din browser pe hardware.
 
 ### Rezultate locale
+
+Actualizarea catalogului/contactului/galeriei: typecheck fără erori, **16 teste unitare**, **19 teste browser**, build static reușit. Etichetele publice demo/preview și e-mailul demonstrativ au fost eliminate; verificarea de lansare rămâne blocată explicit pentru datele încă lipsă.
 
 După optimizarea 3D din 28 octombrie 2026: typecheck fără erori, **12 teste unitare**, **18 teste browser**, build static reușit. Sunt verificate inclusiv absența rotației (comparație de pixeli), oprirea randării după aterizare, pierderea/restaurarea contextului în worker și schimbarea preferinței reduced-motion în timpul încărcării. Verificarea de publicare rămâne blocată intenționat pentru demo.
 
@@ -148,10 +159,16 @@ Testul dev-only a găsit inițial o suprapunere între comutator și toolbar-ul 
 
 ## Înainte de publicare
 
-1. Completează și verifică datele business; elimină demo doar după verificare.
+1. Completează și verifică identitatea juridică, sediul și domeniul în configurația business; nu inventa valori.
 2. Confirmă tarifele, durata, transportul, condițiile și politicile aplicabile.
 3. Confirmă drepturile tuturor materialelor, inclusiv cele terțe, și actualizează manifestul.
-4. Verifică juridic textele de contact/confidențialitate; cele existente descriu numai demo-ul.
+4. Verifică juridic textele de contact/confidențialitate/închiriere și practicile găzduirii finale.
 5. Testează pe hardware, verifică accesibilitatea și măsoară performanța pe găzduirea finală.
 6. Rulează `npm run build:release`. Refuză demo, lipsuri și media fără drepturi confirmate.
 7. Cere autorizare separată pentru deploy. Nici build-ul, nici aprobarea designului nu autorizează publicarea.
+
+## SAL și informații pentru consumatori
+
+Footer-ul include pictograma SAL oferită de [ANPC](https://www.anpc.ro/sal), legată la [portalul SAL](https://reclamatiisal.anpc.ro/), plus link ANPC, confidențialitate și condiții de închiriere. Copia locală este în [public/legal/anpc-sal.png](./public/legal/anpc-sal.png), cu proveniența în manifestul suplimentar.
+
+Nu este adăugat un badge SOL către vechea platformă europeană: [Comisia Europeană confirmă închiderea ei la 20 iulie 2025](https://consumer-redress.ec.europa.eu/site-relocation_en). Pictograma SAL nu reprezintă o certificare a business-ului și nu înlocuiește datele juridice ori verificarea legală a site-ului.

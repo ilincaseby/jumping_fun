@@ -1,0 +1,25 @@
+---
+import { business } from '../config/business';
+import { contactLinks } from '../lib/business';
+const contacts = contactLinks(business);
+---
+<footer class="site-footer page-width">
+  <div class="footer-contact">
+    <p class="footer-brand">{business.brand} · {business.serviceArea.join(' / ')}</p>
+    <div class="footer-actions">
+      {contacts.phone && <a href={contacts.phone}>{business.contact.phone}</a>}
+      {contacts.whatsapp && <a href={contacts.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>}
+    </div>
+    {business.legal.name && <p>{business.legal.name}</p>}
+    {business.legal.taxId && <p>CUI/CIF: {business.legal.taxId}</p>}
+    {business.legal.registrationNumber && <p>Registrul comerțului: {business.legal.registrationNumber}</p>}
+  </div>
+  <nav class="footer-links" aria-label="Informații și protecția consumatorilor">
+    <a href="/confidentialitate/">Confidențialitate</a>
+    <a href="/conditii-inchiriere/">Condiții de închiriere</a>
+    <a href="https://www.anpc.ro/" target="_blank" rel="noopener noreferrer">ANPC</a>
+  </nav>
+  <a class="sal-link" href="https://reclamatiisal.anpc.ro/" target="_blank" rel="noopener noreferrer">
+    <img src="/legal/anpc-sal.png" width="201" height="50" loading="lazy" alt="ANPC — Soluționarea alternativă a litigiilor. Detalii." />
+  </a>
+</footer>

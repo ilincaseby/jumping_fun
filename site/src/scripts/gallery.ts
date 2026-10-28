@@ -15,6 +15,8 @@ if (dialog) {
       event.preventDefault();
       error.hidden = true;
       image.alt = link.dataset.alt ?? '';
+      image.width = Number(link.dataset.width);
+      image.height = Number(link.dataset.height);
       image.src = link.href;
       caption.textContent = link.dataset.caption ?? '';
       dialog.showModal();

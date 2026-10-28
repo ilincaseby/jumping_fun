@@ -1,5 +1,6 @@
 import type { ImageMetadata } from 'astro';
-import patrula from '../assets/products/patrula.png';
+import patrula from '../assets/products/patrula-xxxl.jpg';
+import patrulaInterior from '../assets/products/patrula.png';
 import race from '../assets/products/race.png';
 import casa from '../assets/products/casa.png';
 import unicorn from '../assets/products/unicorn.png';
@@ -10,6 +11,7 @@ import lateral from '../assets/gallery/lateral.png';
 import detaliu from '../assets/gallery/detaliu.png';
 import type { ProductId } from './catalog';
 import { publicationMediaRights } from './publication-media';
+import { gallerySources } from './gallery-sources';
 
 export interface MediaRecord {
   readonly id: string;
@@ -28,7 +30,7 @@ const supplied = (id: string, image: ImageMetadata, alt: string, source: string)
 };
 
 export const productMedia: Record<ProductId, MediaRecord> = {
-  patrula: supplied('patrula', patrula, 'Gonflabil tematic roșu, albastru și galben, fotografiat frontal într-o sală.', 'photos/image.png'),
+  patrula: supplied('patrula', patrula, 'Patrula Cățelușilor Uriaș XXXL, fotografiat frontal pe fundal alb.', 'additional_photos/WhatsApp Image 2026-10-28 at 21.02.23.jpeg'),
   race: supplied('race', race, 'Gonflabil Race cu trei culoare, pe fond alb.', 'docs/media/prepared-v02/race.png'),
   casa: supplied('casa', casa, 'Gonflabil Casă cu două rampe albastre și margini galbene, văzut oblic.', 'docs/media/prepared-v02/casa.png'),
   unicorn: supplied('unicorn', unicorn, 'Gonflabil Unicorn roz, galben și albastru; cotele din fișa furnizată sunt încă vizibile.', 'docs/media/prepared-v02/unicorn.png'),
@@ -37,10 +39,17 @@ export const productMedia: Record<ProductId, MediaRecord> = {
   'mini-monstru': supplied('mini-monstru', miniMonstru, 'Gonflabil Mini-Monstru, cu rampă portocalie și cote din fișa furnizată.', 'docs/media/prepared-v02/mini-monstru.png'),
 };
 
+const additionalImages = import.meta.glob<ImageMetadata>('../assets/gallery/additional/*.JPG', { eager: true, import: 'default' });
+
 export const galleryMedia = [
-  { ...productMedia.patrula, caption: 'Din față, cu toate culorile.' },
+  ...gallerySources.map((photo) => {
+    const image = additionalImages[`../assets/gallery/additional/${photo.file}`];
+    if (!image) throw new Error(`Lipsește fotografia de galerie ${photo.file}.`);
+    return { ...supplied(photo.id, image, photo.alt, `additional_photos/${photo.file}`), caption: photo.caption };
+  }),
+  { ...supplied('patrula-interior', patrulaInterior, 'Gonflabilul XXXL fotografiat frontal într-o sală.', 'photos/image.png'), caption: 'XXXL, în interior.' },
   { ...supplied('lateral', lateral, 'Același gonflabil tematic, fotografiat oblic în interior.', 'photos/image copy 2.png'), caption: 'Același model, alt unghi.' },
   { ...supplied('detaliu', detaliu, 'Detaliu al intrării și al materialului gonflabilului.', 'photos/image copy.png'), caption: 'Mai aproape de detalii.' },
 ] as const;
 
-export const publicationMedia = [...Object.values(productMedia), ...galleryMedia.slice(1)];
+export const publicationMedia = [...Object.values(productMedia), ...galleryMedia];

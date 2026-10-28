@@ -1,0 +1,23 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import LegalDetails from '../components/LegalDetails.astro';
+import { business } from '../config/business';
+---
+<SiteLayout title="Condiții de închiriere" description="Informații despre solicitarea unei oferte, tarife, dimensiuni și detaliile care se confirmă înainte de închiriere." surface="paper">
+  <article class="prose">
+    <h1>Înainte de petrecere.</h1>
+    <h2>O solicitare, nu o rezervare automată</h2>
+    <p>Formularul pregătește un mesaj pentru {business.brand} și îl deschide în WhatsApp. Disponibilitatea modelului, data și condițiile închirierii se confirmă în conversație înainte de încheierea unei rezervări.</p>
+    <h2>Prețuri și servicii incluse</h2>
+    <p>Durata închirierii, transportul, montajul și serviciile incluse se confirmă în oferta pentru evenimentul tău. Nu presupune că un serviciu suplimentar este inclus doar pentru că apare în fotografii.</p>
+    <h2>Dimensiuni și utilizare</h2>
+    <p>Dimensiunile din catalog sunt în metri, în ordinea lungime, lățime, înălțime. Ele descriu echipamentul și nu reprezintă automat spațiul total necesar instalării. Vârstele afișate sunt cele comunicate pentru fiecare model.</p>
+    <p>Numărul de copii din formular este estimarea pentru eveniment, nu capacitatea simultană admisă. Cerințele de amplasare, limitele de utilizare și supravegherea se discută pentru modelul ales.</p>
+    <h2>Locație, vreme și modificări</h2>
+    <p>Zona deservită este {business.serviceArea.join(' / ')}. Pentru împrejurimi, confirmăm posibilitatea și condițiile deplasării. Solicită condițiile pentru vreme nefavorabilă, anulare sau schimbarea datei înainte de confirmarea ofertei.</p>
+    <h2>Informații de identificare</h2>
+    <p>{business.brand}</p>
+    <LegalDetails />
+    <a class="button mt-6" href="/oferta/">Cere detaliile pe WhatsApp</a>
+  </article>
+</SiteLayout>

@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { business } from '../../src/config/business';
-import { localDate, requestMessage, validateRequest, type RequestValues } from '../../src/lib/request';
+import { localDate, requestMessage, whatsappRequestUrl, validateRequest, type RequestValues } from '../../src/lib/request';
 
 const future = new Date();
 future.setFullYear(future.getFullYear() + 1);
-const values: RequestValues = { model: 'casa', date: localDate(future), locality: 'București', details: '' };
+const values: RequestValues = { model: 'casa', date: localDate(future), locality: 'București', children: '', details: '' };
 
 test('valid optional fields remain optional', () => {
   assert.deepEqual(validateRequest(values), {});
@@ -37,4 +37,26 @@ test('invalid input cannot generate a success-shaped message', () => {
 test('worst-case text is preserved as text, not silently discarded', () => {
   const input = { ...values, details: '<img src=x onerror=alert(1)> Șț 日本語 🙂' };
   assert(requestMessage(business, input).includes(input.details));
+});
+
+test('child count is optional but must be a positive safe integer when present', () => {
+  assert.deepEqual(validateRequest(values), {});
+  assert.deepEqual(validateRequest({ ...values, children: '12' }), {});
+  for (const children of ['0', '-1', '1.5', '1e3', 'abc', '9007199254740992']) {
+    assert(validateRequest({ ...values, children }).children, children);
+  }
+  assert(!requestMessage(business, values).includes('Număr de copii'));
+  assert(requestMessage(business, { ...values, children: '0012' }).includes('Număr de copii: 12'));
+});
+
+test('WhatsApp receives only a safely encoded draft for the configured verified destination', () => {
+  const data = { ...values, children: '8', details: 'Șț & detalii? #test\n<b>literal</b>' };
+  const url = new URL(whatsappRequestUrl(business, data));
+  assert.equal(url.origin, 'https://wa.me');
+  assert.equal(url.pathname, '/40767850085');
+  assert.deepEqual([...url.searchParams.keys()], ['text']);
+  assert.equal(url.searchParams.get('text'), requestMessage(business, data));
+  assert(!url.href.includes('<'));
+  assert.throws(() => whatsappRequestUrl({ ...business, contact: { ...business.contact, verified: false } }, values), /verificat/);
+  assert.throws(() => whatsappRequestUrl(business, { ...values, children: '-1' }), /invalide/);
 });

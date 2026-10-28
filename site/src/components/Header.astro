@@ -13,7 +13,6 @@ const links = [
 <header class="site-header page-width">
   <div class="brand-row">
     <a class="wordmark" href="/" aria-label={`${business.brand} — pagina principală`}>{business.brand.toLocaleLowerCase('ro-RO')}<span aria-hidden="true">.</span></a>
-    {business.status === 'demo' && <span class="demo-label">preview demo</span>}
   </div>
   <nav class="route-nav" aria-label="Navigare principală">
     {links.map(([href, label]) => (

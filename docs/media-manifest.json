@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "additionalMaterialsManifest": "./additional-media-manifest.json",
   "consultedAt": "2026-10-28",
   "basePath": "../photos/",
   "permissionEvidence": "Declarație utilizator în sesiune, 2026-10-28: sunt toboganele proprietarului, permite utilizarea.",
