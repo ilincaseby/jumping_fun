@@ -1,0 +1,15 @@
+---
+import { catalog } from '../content/catalog';
+interface Props { local?: boolean; selected?: string }
+const { local = false, selected } = Astro.props;
+---
+<nav class="model-picker" aria-label="Alege un model de tobogan">
+  {catalog.map((product) => (
+    <a
+      href={`${local ? '' : '/tobogane/'}#model-${product.id}`}
+      class:list={['model-chip', { 'is-selected': selected === product.id }]}
+      data-model={product.id}
+      aria-current={selected === product.id ? 'true' : undefined}
+    >{product.shortName}</a>
+  ))}
+</nav>

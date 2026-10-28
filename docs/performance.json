@@ -1,0 +1,75 @@
+{
+  "measuredAt": "2026-10-28T12:50:26.577Z",
+  "conditions": {
+    "platform": "darwin",
+    "node": "v23.11.0",
+    "browser": "Playwright Chromium, headless, ANGLE SwiftShader software WebGL",
+    "network": "localhost, fresh browser contexts, no network/CPU throttling",
+    "limitations": "Single local samples, not Lighthouse scores or real mobile hardware. Preview may transfer JS without compression; gzip sizes are calculated separately."
+  },
+  "results": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lcpMs": 2436,
+      "cls": 0.00346,
+      "longTaskCount": 2,
+      "longTaskTotalMs": 2708,
+      "pageHeight": 900,
+      "triangles": 14250,
+      "drawCalls": 9,
+      "dpr": 1,
+      "resourceTransferBytes": 322446,
+      "sampledFrameP95Ms": 16.8,
+      "frameSampleCount": 60,
+      "frameSampleWindow": "60 intervals immediately after the page load event; includes animation and idle time, not a pure GPU benchmark."
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 900
+      },
+      "lcpMs": 248,
+      "cls": 0.00037,
+      "longTaskCount": 1,
+      "longTaskTotalMs": 261,
+      "pageHeight": 933,
+      "triangles": 14250,
+      "drawCalls": 9,
+      "dpr": 1,
+      "resourceTransferBytes": 293922,
+      "sampledFrameP95Ms": 83.3,
+      "frameSampleCount": 60,
+      "frameSampleWindow": "60 intervals immediately after the page load event; includes animation and idle time, not a pure GPU benchmark."
+    }
+  ],
+  "bundles": [
+    {
+      "file": "SlideScene.astro_astro_type_script_index_0_lang.DXdtJ_zH.js",
+      "bytes": 4355,
+      "gzipBytes": 1946
+    },
+    {
+      "file": "catalog.DP-V0Zxs.js",
+      "bytes": 1150,
+      "gzipBytes": 545
+    },
+    {
+      "file": "oferta.astro_astro_type_script_index_0_lang.CLKWyjao.js",
+      "bytes": 4421,
+      "gzipBytes": 2149
+    },
+    {
+      "file": "scene.CQ5vpCBU.js",
+      "bytes": 555267,
+      "gzipBytes": 137854
+    },
+    {
+      "file": "tobogane.astro_astro_type_script_index_0_lang.D3rrFLQX.js",
+      "bytes": 21370,
+      "gzipBytes": 8452
+    }
+  ]
+}

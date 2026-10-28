@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "consultedAt": "2026-10-28",
+  "basePath": "../photos/",
+  "permissionEvidence": "Declarație utilizator în sesiune, 2026-10-28: sunt toboganele proprietarului, permite utilizarea.",
+  "rightsProfiles": {
+    "supplied-equipment": {
+      "author": "Autorul fotografiei nu este identificat; material furnizat de utilizator pentru proprietar.",
+      "licenseOrPermission": "Permisiune de utilizare declarată de utilizator în numele proprietarului.",
+      "display": "approved-for-use",
+      "displayScope": "Propunere Figma și afișarea materialului furnizat în contextul echipamentului; verificare finală a drepturilor terțe înainte de lansare.",
+      "reconstruction3d": "reference-only",
+      "textures": "not-approved",
+      "restrictions": "Fără extragerea sau reconstruirea personajelor, logo-urilor, graficii sau designurilor distinctive; nu elimina watermark-uri; nu afirma licențe ale producătorului neverificate."
+    },
+    "brand-reference": {
+      "author": "Necunoscut; material furnizat local.",
+      "licenseOrPermission": "Furnizat pentru research; dreptul asupra ilustrației și derivatelor nu este documentat separat.",
+      "display": "reference-only",
+      "reconstruction3d": "reference-only",
+      "textures": "not-approved",
+      "restrictions": "Nu reproduce copii/personaje sau logo ca model; cere confirmare înainte de reutilizarea ilustrației complete în site."
+    }
+  },
+  "assets": [
+    {"id":"brand-poster-text","file":"WhatsApp Ima-10-28 at 13.00.20.jpeg","width":689,"height":660,"type":"promotional-poster","rights":"brand-reference","represents":"Oferta și zona București/Ilfov","use":"Research, nu hero","crop":"Integral","alt":"Afiș de închiriere tobogane în București și Ilfov.","quality":"Text lizibil; rezoluție mică pentru un hero desktop."},
+    {"id":"brand-poster-social","file":"WhatsApp Image -10-28 at 13.00.20.jpeg","width":1536,"height":1024,"type":"promotional-poster","rights":"brand-reference","represents":"Identitate, tobogan ilustrat, QR și nume sociale","use":"Research","crop":"Integral; nu elimina QR sau însemne","alt":"Afiș Jumping Fun cu tobogan ilustrat și rețele sociale.","quality":"Lizibil la lățime medie; nu este fotografie de echipament."},
+    {"id":"brand-illustration","file":"WhatsApp Image 2026-10-28 at 13.00.20.jpeg","width":1024,"height":1024,"type":"brand-illustration","rights":"brand-reference","represents":"Tobogan ilustrat și trei personaje","use":"Research de paletă și volum; nu replică 3D","crop":"Integral","alt":"Ilustrație Jumping Fun cu un tobogan colorat.","quality":"Siluetă clară, dar obturată de personaje și text; fără informație despre spate."},
+    {"id":"patrol-location-front","file":"image.png","width":2048,"height":1536,"type":"location-photo","rights":"supplied-equipment","represents":"Echipament tematic, vedere frontală în interior","use":"Galerie principală","crop":"4:3, păstrează baza și înălțimea; fără text suprapus","alt":"Tobogan gonflabil roșu, albastru și galben, fotografiat frontal într-o sală.","quality":"Bun pentru galerie desktop la 600–900 px CSS; lumină mixtă, fundal ocupat; fără persoane."},
+    {"id":"patrol-location-detail","file":"image copy.png","width":1536,"height":2048,"type":"location-photo","rights":"supplied-equipment","represents":"Detaliu frontal lateral și însemne Jumping Fun","use":"Galerie, detaliu","crop":"3:4, păstrează însemnele","alt":"Detaliu al intrării și al materialului gonflabilului Jumping Fun.","quality":"Bun la dimensiuni moderate; perspectivă oblică; nu arată obiectul întreg."},
+    {"id":"patrol-location-angle","file":"image copy 2.png","width":1536,"height":2048,"type":"location-photo","rights":"supplied-equipment","represents":"Vedere oblică în aceeași locație","use":"Galerie mobilă","crop":"3:4; se poate reduce tavanul gol, fără a tăia produsul","alt":"Gonflabil Jumping Fun fotografiat oblic în interior.","quality":"Obiect clar, mult spațiu gol deasupra; nu confunda unghiuri diferite cu evenimente diferite."},
+    {"id":"race-front","file":"image copy 3.png","width":1284,"height":1506,"type":"catalog-image","rights":"supplied-equipment","represents":"Race, vedere frontală","use":"Imagine produs Race","crop":"Contain, fond alb, păstrează siglele","alt":"Tobogan Race cu trei culoare colorate, văzut frontal.","quality":"Contur moale; potrivit până la aproximativ 420 px CSS, nu hero full-width."},
+    {"id":"unicorn-sheet","file":"image copy 4.png","width":864,"height":1184,"type":"catalog-sheet","rights":"supplied-equipment","represents":"Unicorn, preț 500 lei și cote","use":"Fișă produs / sursă de date","crop":"Integral în detaliu; textul se transcrie separat în UI","alt":"Fișă Unicorn cu imagine, cote și tariful înscris de 500 lei.","quality":"Text principal lizibil; miniaturile sunt prea mici pentru zoom detaliat."},
+    {"id":"train-decorated-sheet","file":"image copy 5.png","width":1024,"height":1024,"type":"catalog-sheet","rights":"supplied-equipment","represents":"Tren, preț 550 lei și cote","use":"Research; se preferă fișa fără decor","crop":"Integral","alt":"Fișă decorată pentru toboganul Tren, cu tarif de 550 lei.","quality":"Fundal decorativ aglomerat; alternativă mai curată în image copy 15.png."},
+    {"id":"castle-sheet","file":"image copy 6.png","width":1024,"height":1024,"type":"catalog-sheet","rights":"supplied-equipment","represents":"Castel, preț 450 lei și cote","use":"Catalog / fișă produs","crop":"Integral la detaliu; fără ștergerea însemnelor","alt":"Tobogan Castel cu turnuri roșii, rampă albastră și tarif de 450 lei.","quality":"Lizibil pentru catalog; vederile secundare oferă siluete, nu detalii tehnice."},
+    {"id":"house-front-angle","file":"image copy 7.png","width":1284,"height":1515,"type":"catalog-image","rights":"supplied-equipment","represents":"2 în 1 Casă, vedere frontal-oblică","use":"Catalog și research de volum generic","crop":"Contain; păstrează baza și tubul","alt":"Gonflabil Casă cu structură roșie și două rampe albastre cu margini galbene.","quality":"Mult alb deasupra; contururi moi; siluetă bună, nu textură de proiectat pe 3D."},
+    {"id":"house-high-angle","file":"image copy 8.png","width":1284,"height":1543,"type":"catalog-image","rights":"supplied-equipment","represents":"2 în 1 Casă, vedere de sus oblică","use":"Imagine principală produs Casă","crop":"Contain; fără îndepărtarea etichetelor","alt":"Tobogan Casă văzut de sus, cu spațiul de joacă din spate vizibil.","quality":"Unghi util pentru volum; fără vedere completă a spatelui; moderat pentru card."},
+    {"id":"patrol-warehouse","file":"image copy 9.png","width":1600,"height":1200,"type":"location-photo","rights":"supplied-equipment","represents":"Vedere frontală în hală","use":"Galerie secundară, nu dovadă de eveniment","crop":"4:3, păstrează produsul","alt":"Gonflabil tematic Jumping Fun fotografiat frontal într-o hală.","quality":"Bun la dimensiune medie; fundal industrial; contextul și data nu sunt verificate."},
+    {"id":"patrol-sheet","file":"image copy 10.png","width":1467,"height":1072,"type":"catalog-sheet","rights":"supplied-equipment","represents":"Patrula Cățelușilor XXXL, 1000 lei","use":"Sursă de date; imagine principală alternativă în locație","crop":"Integral; nu folosi textul raster ca singura informație","alt":"Fișă pentru Patrula Cățelușilor XXXL cu tarif de 1.000 lei.","quality":"Text comercial lizibil; litere deformate în însemnele de pe obiect; origine/procesare neconfirmate."},
+    {"id":"patrol-cutout","file":"image copy 11.png","width":1184,"height":864,"type":"catalog-image","rights":"supplied-equipment","represents":"Gonflabil tematic pe fond alb","use":"Card produs contextual","crop":"Contain, fără eliminarea logo-urilor","alt":"Vedere frontală pe fond alb a gonflabilului tematic XXXL.","quality":"Acceptabil la card; unele inscripții deformate, nerecomandat drept dovadă de autenticitate."},
+    {"id":"race-sheet","file":"image copy 12.png","width":928,"height":1120,"type":"catalog-sheet","rights":"supplied-equipment","represents":"3-1 Race, 600 lei","use":"Date catalog","crop":"Integral","alt":"Fișă Race cu tariful de 600 lei și dimensiuni înscrise.","quality":"Text principal lizibil; unitățile cotelor nu sunt înscrise."},
+    {"id":"race-rear","file":"image copy 13.png","width":1284,"height":1219,"type":"catalog-image","rights":"supplied-equipment","represents":"Race, vedere din spate cu zonă de cățărare","use":"Imagine secundară Race; research generic de volum","crop":"Contain; păstrează etichetele","alt":"Spatele gonflabilului Race, cu plasă și zonă de cățărare.","quality":"Siluetă utilă și obiect neobstrucționat; nu certifică utilizarea sau siguranța."},
+    {"id":"house-sheet","file":"image copy 14.png","width":928,"height":1120,"type":"catalog-sheet","rights":"supplied-equipment","represents":"2 în 1 Casă, 550 lei","use":"Date catalog","crop":"Integral","alt":"Fișă Casă cu tariful de 550 lei și dimensiuni înscrise.","quality":"Text lizibil, unități de confirmat; imagine similară cu vederea oblică separată."},
+    {"id":"train-clean-sheet","file":"image copy 15.png","width":1024,"height":1024,"type":"catalog-sheet","rights":"supplied-equipment","represents":"Tren, fișă fără fundal decorativ","use":"Catalog și date produs","crop":"Integral; pentru card se poate decupa numai zona imaginii principale, fără ștergerea mărcilor","alt":"Tobogan Tren cu zone albastre și roșii, tarif înscris de 550 lei.","quality":"Mai curat decât varianta decorată; încă are cote peste fotografie."},
+    {"id":"unicorn-sheet-alternate","file":"image copy 16.png","width":864,"height":1184,"type":"catalog-sheet","rights":"supplied-equipment","represents":"A doua fișă Unicorn","use":"Referință redundantă, nu încă un produs","crop":"Integral","alt":"Fișă alternativă Unicorn, cu tarif de 500 lei.","quality":"Vizual foarte similară cu image copy 4.png; nu s-a verificat identitate binară."},
+    {"id":"mini-monster-sheet","file":"image copy 17.png","width":896,"height":1152,"type":"catalog-sheet","rights":"supplied-equipment","represents":"Mini-Monstru, 200 lei","use":"Catalog și date produs","crop":"Integral; fără extragerea personajelor ca mascote","alt":"Fișă Mini-Monstru, cu rampă mică portocalie și tarif de 200 lei.","quality":"Text principal lizibil; imagine mai moale; card moderat, nu hero."},
+    {"id":"castle-sheet-alternate","file":"image copy 18.png","width":1024,"height":1024,"type":"catalog-sheet","rights":"supplied-equipment","represents":"A doua fișă Castel","use":"Referință redundantă, nu încă un produs","crop":"Integral","alt":"Fișă alternativă Castel, cu tarif de 450 lei.","quality":"Vizual foarte similară cu image copy 6.png; nu s-a verificat identitate binară."}
+  ],
+  "externalSearches": [
+    {"url":"https://www.pexels.com/search/inflatable%20slide/","status":"reference-only","result":"Doar titlu de căutare; niciun asset verificat.","originalPinSource":null,"resolution":null,"displayRights":"unverified","reconstruction3dRights":"unverified","textureRights":"unverified"},
+    {"url":"https://www.pexels.com/search/bouncy%20castle%20slide/","status":"reference-only","result":"Doar titlu de căutare; niciun asset verificat.","originalPinSource":null,"resolution":null,"displayRights":"unverified","reconstruction3dRights":"unverified","textureRights":"unverified"},
+    {"url":"https://www.pinterest.com/search/pins/?q=inflatable%20slide","status":"reference-only","result":"Dialogul de autentificare blochează pinurile; nicio sursă originală confirmată.","originalPinSource":null,"resolution":null,"displayRights":"unverified","reconstruction3dRights":"unverified","textureRights":"unverified"}
+  ],
+  "preparedV02": {
+    "createdAt": "2026-10-28",
+    "permission": "Utilizatorul a cerut explicit copii fără text pentru noua propunere.",
+    "tool": "FFmpeg existent local; fără instalare, servicii generative sau transfer către un editor de imagini terț.",
+    "sourceFilesUnchanged": true,
+    "rightsProfile": "supplied-equipment",
+    "limits": "Au fost eliminate titlurile, prețurile și vârstele din margini și miniaturile secundare. Cotele care intersectează produsul rămân. Nu au fost șterse logo-uri, etichete, avertismente sau watermark-uri și nu au fost reconstruite suprafețe ascunse.",
+    "assets": [
+      {"id":"race-prepared-v02","sourceAssetId":"race-front","path":"media/prepared-v02/race.png","width":1120,"height":1180,"ffmpegFilter":"crop=1120:1180:85:260","figmaSourceNode":"14:224","quality":"Verificat vizual: siluetă completă, sigle păstrate, margini albe reduse."},
+      {"id":"casa-prepared-v02","sourceAssetId":"house-high-angle","path":"media/prepared-v02/casa.png","width":1220,"height":1160,"ffmpegFilter":"crop=1220:1160:40:365","figmaSourceNode":"14:226","quality":"Verificat vizual: conuri, bază și tub păstrate; fără spațiul alb excesiv de sus."},
+      {"id":"unicorn-prepared-v02","sourceAssetId":"unicorn-sheet","path":"media/prepared-v02/unicorn.png","width":840,"height":570,"ffmpegFilter":"crop=840:570:12:200","figmaSourceNode":"14:223","quality":"Verificat vizual: fără antet, tarif sau miniaturi; dimensiunile suprapuse și sigla rămân."},
+      {"id":"tren-prepared-v02","sourceAssetId":"train-clean-sheet","path":"media/prepared-v02/tren.png","width":980,"height":650,"ffmpegFilter":"drawbox=x=20:y=20:w=520:h=90:color=white:t=fill,drawbox=x=20:y=110:w=275:h=120:color=white:t=fill,drawbox=x=875:y=80:w=149:h=65:color=white:t=fill,crop=980:650:24:115","figmaSourceNode":"14:222","quality":"Verificat vizual: antetul din marginea albă eliminat, obiectul păstrat; cotele de pe obiect rămân."},
+      {"id":"castel-prepared-v02","sourceAssetId":"castle-sheet","path":"media/prepared-v02/castel.png","width":960,"height":685,"ffmpegFilter":"drawbox=x=20:y=25:w=520:h=80:color=white:t=fill,drawbox=x=20:y=108:w=260:h=55:color=white:t=fill,drawbox=x=0:y=160:w=265:h=85:color=white:t=fill,crop=960:685:40:30","figmaSourceNode":"14:227","quality":"Verificat vizual după corectarea pixelilor reziduali ai antetului; produsul și însemnele sunt păstrate."},
+      {"id":"mini-monstru-prepared-v02","sourceAssetId":"mini-monster-sheet","path":"media/prepared-v02/mini-monstru.png","width":856,"height":595,"ffmpegFilter":"drawbox=x=10:y=10:w=790:h=110:color=white:t=fill,drawbox=x=10:y=110:w=260:h=80:color=white:t=fill,crop=856:595:20:160","figmaSourceNode":"14:225","quality":"Verificat vizual: coloanele nu sunt tăiate; fără antet sau miniaturi; cotele și personajele originale rămân."}
+    ]
+  },
+  "figmaUsage": {
+    "fileUrl": "https://www.figma.com/design/Da73yGwUUhH0jLMUYme5hl",
+    "version": "v01-unapproved",
+    "uploadedOriginalAssetIds": ["patrol-location-front", "race-front", "house-high-angle", "unicorn-sheet", "train-clean-sheet", "castle-sheet", "mini-monster-sheet", "patrol-location-angle", "patrol-location-detail"],
+    "catalogDisplay": "location photo uses FILL; catalogue images and sheets use FIT without removing marks or raster text",
+    "galleryDisplay": "FILL within 4:3 and 3:4 frames; no watermark removal",
+    "desktopFrame": "3:23",
+    "mobileFrame": "8:86",
+    "rightsBasis": "supplied-equipment profile; no stock assets, brand JPEG uploads or social-media downloads",
+    "thirdPartyArtReviewBeforePublication": true,
+    "revisionInProgress": {
+      "version": "v02",
+      "status": "blocked-by-official-mcp-quota-not-verified",
+      "desktopHomeFrame": "16:224",
+      "mobileHomeFrame": "16:298",
+      "desktopCatalogDefaultFrame": "16:498",
+      "mobileCatalogDefaultFrame": "16:961",
+      "preparedImageIds": ["race-prepared-v02","casa-prepared-v02","unicorn-prepared-v02","tren-prepared-v02","castel-prepared-v02","mini-monstru-prepared-v02"],
+      "originalImageId": "patrol-location-front",
+      "motionApplied": false,
+      "finalScreenshotsAvailable": false
+    }
+  },
+  "proposedOriginal3d": {
+    "status":"implemented-original-procedural-demo",
+    "subject":"Tobogan original stilizat din volume generice; nu replică a unui produs",
+    "reference":"Categoria tobogan gonflabil și paleta brandului; fără copierea unui design distinctiv",
+    "display":"approved-for-use",
+    "figmaRepresentation":"Original editable 2D perspective illustration, not a render from an existing mesh",
+    "figmaComponent":"3:4",
+    "reconstruction3d":"original-procedural-geometry-not-photo-reconstruction",
+    "implementationSources":["../site/src/lib/three/spec.ts","../site/src/lib/three/model.ts","../site/src/lib/three/scene.ts"],
+    "posterSource":"../site/src/assets/scene/slide-poster.png",
+    "posterProvenance":"Rendered locally from the implemented original model with scripts/capture-poster.ts; optimized by Astro into responsive WebP.",
+    "measuredScene":{"renderedTriangles":14250,"drawCalls":9,"maxDpr":1.5,"sceneChunkGzipBytes":137854,"largestPosterWebpBytes":84344},
+    "textures":"plain-procedural-colors-only",
+    "restrictions":"Fără personaje, sigle, pixeli proiectați din fotografii sau afirmația că modelul se închiriază."
+  }
+}

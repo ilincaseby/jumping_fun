@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-10-28T12:40:00Z",
+  "generatedOnPlatform": "darwin",
+  "projectType": "webapp",
+  "setup": [],
+  "assertions": [
+    { "name": "astro-typecheck", "kind": "process", "command": "npm", "args": ["run", "check"], "verificationMethod": "exit-code", "expected": "0", "timeoutSeconds": 120 },
+    { "name": "tests-pass", "kind": "process", "command": "npm", "args": ["test"], "verificationMethod": "test-results", "expected": "0", "timeoutSeconds": 120 },
+    { "name": "static-production-build", "kind": "process", "command": "npm", "args": ["run", "build"], "verificationMethod": "exit-code", "expected": "0", "timeoutSeconds": 120 },
+    { "name": "production-browser-tests", "kind": "process", "command": "npm", "args": ["run", "test:e2e"], "verificationMethod": "exit-code", "expected": "0", "timeoutSeconds": 180 },
+    { "name": "demo-publication-blocked", "kind": "process", "command": "npm", "args": ["run", "check:release"], "verificationMethod": "exit-code", "expected": "1", "timeoutSeconds": 60 }
+  ]
+}

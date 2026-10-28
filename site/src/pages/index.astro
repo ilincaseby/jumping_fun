@@ -1,0 +1,23 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import ModelPicker from '../components/ModelPicker.astro';
+import SlideScene from '../components/SlideScene.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../config/business';
+const area = business.serviceArea.join(' și ');
+---
+<SiteLayout title="Bucurie la înălțime" description={`Tobogane gonflabile de închiriat în ${area}. Descoperă modelele și pregătește o cerere de ofertă.`} active="/">
+  <div class="page-width"><ModelPicker /></div>
+  <section class="hero page-width" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <h1 id="hero-title">Bucurie la<br />înălțime.</h1>
+      <p class="intro">Tobogane gonflabile de închiriat în {area}.<span class="hero-desktop-detail"> Tu alegi data. Hai să discutăm opțiunile pentru petrecerea ta.</span></p>
+      <div class="hero-actions">
+        <a class="button" href="/oferta/">Cere o ofertă <Icon name="arrow-right" /></a>
+        <a class="button secondary" href="/tobogane/">Vezi catalogul</a>
+      </div>
+      <p class="caption">Disponibilitatea și condițiile se confirmă în ofertă.</p>
+    </div>
+    <SlideScene />
+  </section>
+</SiteLayout>

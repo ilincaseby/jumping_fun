@@ -1,0 +1,35 @@
+import type { BusinessConfig } from '../config/business';
+
+interface PublicationMedia {
+  readonly id: string;
+  readonly displayApproved: boolean;
+  readonly thirdPartyCleared: boolean;
+}
+
+export function publicationIssues(config: BusinessConfig, media: readonly PublicationMedia[]): string[] {
+  const issues: string[] = [];
+  if (config.status !== 'verified') issues.push('Configurația este încă în modul demo.');
+  if (config.legal.name.includes('DEMO') || !config.legal.name.trim()) issues.push('Denumirea juridică nu este verificată.');
+  for (const [label, value] of Object.entries({
+    CUI: config.legal.taxId,
+    'Registrul comerțului': config.legal.registrationNumber,
+    Sediu: config.legal.registeredAddress,
+    'Adresă corespondență': config.legal.correspondenceAddress,
+    Telefon: config.contact.phone,
+  })) if (!value?.trim()) issues.push(`${label}: valoare obligatorie lipsă.`);
+  if (!config.contact.verified) issues.push('Contactele nu sunt verificate.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.contact.email) || config.contact.email.endsWith('@example.com')) {
+    issues.push('Adresa de e-mail este demonstrativă sau invalidă.');
+  }
+  if (!config.siteUrl || !URL.canParse(config.siteUrl) || new URL(config.siteUrl).protocol !== 'https:' ||
+      /(^|\.)example\.(com|org|net)$/.test(new URL(config.siteUrl).hostname)) {
+    issues.push('Este necesar un URL HTTPS de producție verificat.');
+  }
+  if (!config.serviceArea.length) issues.push('Zona deservită lipsește.');
+  if (!config.commercialTermsVerified) issues.push('Tarifele și condițiile comerciale nu sunt verificate.');
+  for (const field of config.missingFields) issues.push(`De confirmat: ${field}.`);
+  for (const item of media) {
+    if (!item.displayApproved || !item.thirdPartyCleared) issues.push(`Media ${item.id}: drepturi incomplete.`);
+  }
+  return issues;
+}

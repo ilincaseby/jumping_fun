@@ -1,0 +1,33 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { business } from '../config/business';
+const questions = [
+  ['Cum verific disponibilitatea?', 'Alege un model și indică data și localitatea. Disponibilitatea se confirmă în ofertă, nu prin completarea formularului.'],
+  ['Ce include tariful afișat?', 'Sumele sunt cele din materialele furnizate. Durata, transportul și serviciile incluse trebuie confirmate înainte de închiriere.'],
+  ['De cât spațiu am nevoie?', 'Trimite detalii despre loc și model. Spațiul de montaj și cerințele de utilizare se confirmă pentru echipamentul ales. Cotele din imagini nu reprezintă automat spațiul minim necesar.'],
+  ['Ce facem dacă vremea se schimbă?', 'Cere condițiile pentru vreme nefavorabilă și anulare înainte de a confirma oferta. Nu presupunem o politică necomunicată.'],
+];
+---
+<SiteLayout title="De la idee la cererea ta" description="Cum pregătești cererea de ofertă și ce detalii trebuie confirmate înainte de închiriere." active="/informatii/" surface="paper">
+  <section class="page-width" aria-labelledby="info-title">
+    <div class="page-heading"><h1 id="info-title">De la „ce-ar fi?”<br />la cererea ta.</h1></div>
+    <div class="info-layout">
+      <div>
+        <ol class="steps">
+          <li><div><h2>Alegi modelul</h2><p>Pornești de la fotografii și notezi ce îți place. Poți cere ajutor dacă încă nu ai ales.</p></div></li>
+          <li><div><h2>Spui când și unde</h2><p>Data și localitatea ne ajută să discutăm disponibilitatea și detaliile evenimentului.</p></div></li>
+          <li><div><h2>Primești detaliile</h2><p>Modelul, durata, transportul și condițiile se stabilesc în ofertă. Nimic nu se rezervă automat.</p></div></li>
+        </ol>
+        <div class="area-note">
+          <h3>{business.serviceArea.join('. ')}.</h3>
+          <p class="mt-3 text-sm">Pentru împrejurimi, confirmăm în ofertă dacă și în ce condiții se poate ajunge.</p>
+          <a class="button mt-5" href="/oferta/">Pregătește cererea</a>
+        </div>
+      </div>
+      <div>
+        <h2 class="faq-title">Întrebări utile</h2>
+        {questions.map(([question, answer]) => <details class="faq"><summary>{question}</summary><p>{answer}</p></details>)}
+      </div>
+    </div>
+  </section>
+</SiteLayout>

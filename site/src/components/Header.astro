@@ -1,0 +1,23 @@
+---
+import { business } from '../config/business';
+interface Props { active?: string }
+const { active = '/' } = Astro.props;
+const links = [
+  ['/', 'Acasă'],
+  ['/tobogane/', 'Catalog'],
+  ['/galerie/', 'Galerie'],
+  ['/informatii/', 'Info'],
+  ['/oferta/', 'Ofertă'],
+];
+---
+<header class="site-header page-width">
+  <div class="brand-row">
+    <a class="wordmark" href="/" aria-label={`${business.brand} — pagina principală`}>{business.brand.toLocaleLowerCase('ro-RO')}<span aria-hidden="true">.</span></a>
+    {business.status === 'demo' && <span class="demo-label">preview demo</span>}
+  </div>
+  <nav class="route-nav" aria-label="Navigare principală">
+    {links.map(([href, label]) => (
+      <a class:list={['gummy-link', { 'is-current': active === href }]} href={href} aria-current={active === href ? 'page' : undefined}>{label}</a>
+    ))}
+  </nav>
+</header>

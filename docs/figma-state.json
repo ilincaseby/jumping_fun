@@ -1,0 +1,48 @@
+{
+  "fileKey": "Da73yGwUUhH0jLMUYme5hl",
+  "sessionId": "e028e5b0-ccea-472f-9946-fcc8cbdf4185",
+  "pageId": "0:1",
+  "updatedAt": "2026-10-28",
+  "status": "v02-direction-approved-for-implementation",
+  "approvalScope": "Direcția v02 văzută de utilizator; Figma rămâne parțială. Destinație confirmată: jumping_fun/site/, Astro + TypeScript + Tailwind, motion și Three.js izolate.",
+  "approved": true,
+  "implementation": {
+    "directory": "jumping_fun/site",
+    "status": "local-demo-implemented-and-validated",
+    "previewUrl": "http://127.0.0.1:4327/",
+    "unitTestsPassed": 12,
+    "browserTestsPassed": 15,
+    "deployed": false,
+    "hardwareValidationPending": true
+  },
+  "v01": {
+    "desktop": "3:23",
+    "mobile": "8:86",
+    "formDesktop": "9:170",
+    "formMobile": "9:199",
+    "errorMobile": "9:225",
+    "previewDesktop": "9:243",
+    "previewMobile": "9:253"
+  },
+  "v02": {
+    "foundation": "15:222",
+    "components": {"chip":"15:226","selectedChip":"15:228","desktopCard":"15:231","mobileCard":"15:238","detailedIllustration":"15:246"},
+    "home": {"desktop":"16:224","mobile":"16:298","desktopObject":"16:266","mobileObject":"16:339"},
+    "catalogOrder": ["patrol","race","casa","unicorn","tren","castel","mini-monstru"],
+    "desktopCatalogFrames": ["16:371","16:431","16:498","16:565","16:632","16:699","16:766"],
+    "mobileCatalogFrames": ["16:826","16:890","16:961","16:1032","16:1103","16:1174","16:1245"],
+    "defaultModelIndex": 2,
+    "navigationWired": false,
+    "motionApplied": false,
+    "visuallyVerified": false,
+    "missingRoutes": ["gallery","info","offer"],
+    "preparedImageHashes": {
+      "race":"5f2ec74542b05534b8bb1d80e4ae077fe7e36a2a",
+      "casa":"3116c4ac6200de697d179f277ed890105e4143e8",
+      "unicorn":"fd43f0a5e491c4cefef3a37158165da2fe3b6e4b",
+      "tren":"0e0fddd66edf5087dd30e5a897e6a83e41c9a370",
+      "castel":"7632168abde4fd956f5a51ff63dd5985134d6517",
+      "mini-monstru":"6c720f532010e5fa4f5c4118a3c3f082b177d1b2"
+    }
+  }
+}

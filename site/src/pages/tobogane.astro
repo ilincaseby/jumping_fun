@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import ModelPicker from '../components/ModelPicker.astro';
+import Icon from '../components/Icon.astro';
+import { catalog, defaultProduct, formatPrice, priceDisclaimer } from '../content/catalog';
+import { productMedia } from '../content/media';
+---
+<SiteLayout title="Alege locul lor de joacă" description="Explorează cele șapte modele documentate, vezi imaginile și pregătește cererea de ofertă." active="/tobogane/">
+  <section class="catalog" aria-labelledby="catalog-title">
+    <div class="page-width">
+      <div class="page-heading">
+        <h1 id="catalog-title">Alege locul lor<br /> de joacă.</h1>
+        <p>Un model în centru. Restul, la un swipe distanță.</p>
+      </div>
+      <ModelPicker local selected={defaultProduct} />
+      <p class="caption" data-catalog-error role="status" hidden></p>
+    </div>
+    <div class="carousel" data-carousel>
+      <div class="carousel-viewport" tabindex="0" role="region" aria-roledescription="carusel" aria-label="Modele de tobogane. Folosește săgețile pentru navigare.">
+        <div class="carousel-track">
+          {catalog.map((product, index) => {
+            const media = productMedia[product.id];
+            return (
+              <article class="product-slide" id={`model-${product.id}`} data-product={product.id} aria-label={`${index + 1} din ${catalog.length}: ${product.name}`}>
+                <div class="product-card">
+                  <div class="product-media" data-media data-kind={product.id === 'patrula' ? 'photo' : 'catalog'}>
+                    <Image src={media.image} alt={media.alt} widths={[320, 640, 960]} sizes="(max-width: 700px) 76vw, 460px" width={960} format="webp" quality={82} loading={product.id === defaultProduct ? 'eager' : 'lazy'} />
+                    <p class="media-error" role="status">Fotografia nu este disponibilă. Poți cere detalii despre acest model.</p>
+                  </div>
+                  <div class="product-copy">
+                    <h2>{product.name}</h2>
+                    <p class="product-price">{formatPrice(product.price)}</p>
+                    <p class="product-note">Tarif în material, nu preț total.</p>
+                    <a class="button" href={`/oferta/?model=${product.id}`}>Cere o ofertă <Icon name="arrow-right" size={18} /></a>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+      <div class="carousel-controls" hidden>
+        <button class="icon-button" type="button" data-prev aria-label="Modelul anterior"><Icon name="arrow-left" /></button>
+        <p class="carousel-count" data-count aria-hidden="true">3 / 7</p>
+        <button class="icon-button" type="button" data-next aria-label="Modelul următor"><Icon name="arrow-right" /></button>
+      </div>
+      <p class="sr-only" data-announcement aria-live="polite" aria-atomic="true"></p>
+    </div>
+    <p class="catalog-note caption page-width">{priceDisclaimer}</p>
+    <noscript><p class="catalog-note caption page-width">Glisează lista sau folosește butoanele de model de mai sus. Catalogul rămâne accesibil fără JavaScript.</p></noscript>
+  </section>
+  <script>
+    import '../scripts/carousel';
+  </script>
+</SiteLayout>

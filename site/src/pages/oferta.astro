@@ -1,0 +1,69 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { business } from '../config/business';
+import { contactLinks } from '../lib/business';
+import { catalog } from '../content/catalog';
+const contacts = contactLinks(business);
+---
+<SiteLayout title="Hai să pregătim petrecerea" description="Pregătește local o cerere cu modelul, data și localitatea. Demo-ul nu trimite date și nu rezervă echipamente." active="/oferta/" surface="paper">
+  <section class="form-shell" aria-labelledby="form-title">
+    <div class="form-heading">
+      <h1 id="form-title">Hai să pregătim<br />petrecerea.</h1>
+      <p class="mt-4">Alege ce știi deja. Restul detaliilor se discută în ofertă.</p>
+    </div>
+    <p class="demo-notice">Previzualizare locală. Nimic nu se trimite și nimic nu se rezervă.</p>
+    <div class="error-summary" data-error-summary tabindex="-1" role="alert" hidden><p>Mai avem câteva detalii de corectat.</p><ul></ul></div>
+    <form class="request-form" data-request-form>
+      <div class="field">
+        <label for="model">Model <span class="font-normal">(opțional)</span></label>
+        <select id="model" name="model" aria-describedby="model-error">
+          <option value="">Nu am decis încă</option>
+          {catalog.map((product) => <option value={product.id}>{product.name}</option>)}
+        </select>
+        <p class="field-error" id="model-error" hidden></p>
+      </div>
+      <div class="field">
+        <label for="date">Data evenimentului *</label>
+        <input id="date" name="date" type="date" required aria-describedby="date-error" />
+        <p class="field-error" id="date-error" hidden></p>
+      </div>
+      <div class="field form-wide">
+        <label for="locality">Localitatea *</label>
+        <input id="locality" name="locality" autocomplete="address-level2" placeholder="Ex.: București, sector 3" maxlength="140" required aria-describedby="locality-error" />
+        <p class="field-error" id="locality-error" hidden></p>
+      </div>
+      <div class="field form-wide">
+        <label for="details">Detalii <span class="font-normal">(opțional)</span></label>
+        <textarea id="details" name="details" maxlength="1500" placeholder="Ce ar fi util de știut despre locul evenimentului?" aria-describedby="details-error details-hint"></textarea>
+        <p class="field-error" id="details-error" hidden></p>
+        <p id="details-hint" class="caption">Nu include nume sau date personale despre copii.</p>
+      </div>
+      <div class="form-wide form-actions">
+        <button class="button" type="button" data-preview-button disabled>Previzualizează cererea</button>
+        <a href="/tobogane/" class="caption">Înapoi la tobogane</a>
+      </div>
+      <noscript><p class="form-wide field-error">Previzualizarea locală are nevoie de JavaScript. Nu există trimitere automată; informațiile despre modele rămân accesibile în catalog.</p></noscript>
+    </form>
+    <section class="preview-panel" data-preview-panel tabindex="-1" aria-labelledby="preview-title" hidden>
+      <h2 id="preview-title">Mesaj pregătit.<br />Nu trimis.</h2>
+      <p class="caption">Acesta nu este un răspuns de disponibilitate sau o confirmare de rezervare.</p>
+      <pre class="preview-text" data-preview-text></pre>
+      <div class="form-actions">
+        <button class="button secondary" type="button" data-copy>Copiează mesajul</button>
+        <button class="button secondary" type="button" data-edit>Modifică detaliile</button>
+      </div>
+      <p class="caption mt-4" data-copy-status role="status"></p>
+      <p class="caption mt-4">Trimiterea rămâne indisponibilă până la verificarea contactelor.</p>
+    </section>
+    <aside class="contact-details">
+      <p>{business.legal.name}</p>
+      <p>{contacts.email ? <a href={contacts.email}>{business.contact.email}</a> : <span>{business.contact.email} — adresă demonstrativă, inactivă</span>}</p>
+      {contacts.phone && <p><a href={contacts.phone}>{business.contact.phone}</a></p>}
+      {contacts.whatsapp && <p><a href={contacts.whatsapp}>WhatsApp</a></p>}
+      {business.openingHours && <p>Program: {business.openingHours}</p>}
+    </aside>
+  </section>
+  <script>
+    import '../scripts/request-form';
+  </script>
+</SiteLayout>
