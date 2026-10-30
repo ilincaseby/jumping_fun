@@ -111,11 +111,18 @@ test('request validates fields and opens only a prefilled WhatsApp draft without
   await page.getByRole('button', { name: 'Continuă pe WhatsApp' }).click();
   await expect(page.locator('#children-error')).toBeVisible();
   await page.locator('#children').fill('12');
+  await page.getByLabel('Vârsta sau intervalul de vârstă').fill('4–8 ani');
+  await page.locator('#ages').evaluate((node) => { (node as HTMLInputElement).value = 'a'.repeat(101); });
+  await page.getByRole('button', { name: 'Continuă pe WhatsApp' }).click();
+  await expect(page.locator('#ages-error')).toBeVisible();
+  await expect(page.locator('#ages')).toHaveAttribute('aria-invalid', 'true');
+  await page.getByLabel('Vârsta sau intervalul de vârstă').fill('4–8 ani');
   await page.getByRole('button', { name: 'Continuă pe WhatsApp' }).click();
   await page.waitForURL('https://wa.me/40767850085?**');
   const draft = new URL(page.url()).searchParams.get('text');
   expect(draft).toContain('Tobogan 2 în 1 Casă');
   expect(draft).toContain('Număr de copii: 12');
+  expect(draft).toContain('Vârsta copiilor: 4–8 ani');
   expect(draft).toContain('<img src=x');
   expect(draft).not.toContain('example.com');
   expect(submissions).toEqual([]);

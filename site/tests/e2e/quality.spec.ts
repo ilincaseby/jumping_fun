@@ -93,6 +93,7 @@ test('maximum accepted request text and absent optional values do not overflow',
   const draft = new URL(page.url()).searchParams.get('text');
   expect(draft).toContain('un tobogan potrivit');
   expect(draft).not.toContain('Număr de copii');
+  expect(draft).not.toContain('Vârsta copiilor');
   expect(draft).toContain(details);
 });
 

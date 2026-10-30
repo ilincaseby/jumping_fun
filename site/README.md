@@ -59,9 +59,11 @@ Brandul, identitatea juridică, telefonul, WhatsApp, e-mailul, URL-ul, rețelele
 
 Catalogul este separat în [src/content/catalog.ts](./src/content/catalog.ts). Denumirile, prețurile, dimensiunile în metri (lungime/lățime/înălțime) și vârstele au fost confirmate direct de utilizator la 28 octombrie 2026. Nu se afișează `/zi`; durata, transportul și serviciile incluse se confirmă în ofertă. Numărul de copii din formular nu reprezintă o capacitate simultană admisă.
 
-Formularul compune local un mesaj cu modelul, data, localitatea, numărul opțional de copii și detaliile. „Continuă pe WhatsApp” deschide `https://wa.me/...` cu textul codificat în URL; WhatsApp decide deschiderea aplicației sau a paginii web, în funcție de dispozitiv. **Mesajul nu se trimite automat**. Nu există POST către un backend al site-ului, rezervare automată sau salvare a formularului în localStorage. Din momentul navigării, textul ajunge la WhatsApp/Meta, lucru explicat în pagina de confidențialitate.
+Formularul compune local un mesaj cu modelul, data, localitatea, numărul și vârsta copiilor (opționale) și detaliile. „Continuă pe WhatsApp” deschide `https://wa.me/...` cu textul codificat în URL; WhatsApp decide deschiderea aplicației sau a paginii web, în funcție de dispozitiv. **Mesajul nu se trimite automat**. Nu există POST către un backend al site-ului, rezervare automată sau salvare a formularului în localStorage. Din momentul navigării, textul ajunge la WhatsApp/Meta, lucru explicat în pagina de confidențialitate.
 
 Numărul de copii este opțional; dacă este completat, trebuie să fie un întreg pozitiv reprezentabil sigur, fără un plafon comercial inventat.
+
+Vârsta sau intervalul de vârstă este un câmp text separat, opțional, de cel mult 100 de caractere (ex.: „6 ani”, „4–8 ani”). Poate fi completat independent de numărul de copii; dacă rămâne gol, nu apare în mesaj. Nu se cer nume sau date de naștere.
 
 ## Fotografii și drepturi
 

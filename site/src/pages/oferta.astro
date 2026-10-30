@@ -5,7 +5,7 @@ import { contactLinks } from '../lib/business';
 import { catalog } from '../content/catalog';
 const contacts = contactLinks(business);
 ---
-<SiteLayout title="Hai să pregătim petrecerea" description="Alege modelul, data, localitatea și, opțional, numărul de copii. Continuă pe WhatsApp cu mesajul precompletat." active="/oferta/" surface="paper">
+<SiteLayout title="Hai să pregătim petrecerea" description="Alege modelul, data, localitatea și, opțional, numărul și vârsta copiilor. Continuă pe WhatsApp cu mesajul precompletat." active="/oferta/" surface="paper">
   <section class="form-shell" aria-labelledby="form-title">
     <div class="form-heading">
       <h1 id="form-title">Hai să pregătim<br />petrecerea.</h1>
@@ -26,7 +26,7 @@ const contacts = contactLinks(business);
         <input id="date" name="date" type="date" required aria-describedby="date-error" />
         <p class="field-error" id="date-error" hidden></p>
       </div>
-      <div class="field">
+      <div class="field form-wide">
         <label for="locality">Localitatea *</label>
         <input id="locality" name="locality" autocomplete="address-level2" placeholder="Ex.: București, sector 3" maxlength="140" required aria-describedby="locality-error" />
         <p class="field-error" id="locality-error" hidden></p>
@@ -36,6 +36,12 @@ const contacts = contactLinks(business);
         <input id="children" name="children" type="text" inputmode="numeric" pattern="[0-9]+" placeholder="Ex.: 12" aria-describedby="children-error children-hint" />
         <p class="field-error" id="children-error" hidden></p>
         <p id="children-hint" class="caption">Estimarea pentru eveniment, nu capacitatea simultană a gonflabilului.</p>
+      </div>
+      <div class="field">
+        <label for="ages">Vârsta sau intervalul de vârstă <span class="font-normal">(opțional)</span></label>
+        <input id="ages" name="ages" type="text" maxlength="100" placeholder="Ex.: 6 ani sau 4–8 ani" aria-describedby="ages-error ages-hint" />
+        <p class="field-error" id="ages-error" hidden></p>
+        <p id="ages-hint" class="caption">Vârsta aproximativă a copiilor, fără nume sau date de naștere.</p>
       </div>
       <div class="field form-wide">
         <label for="details">Detalii <span class="font-normal">(opțional)</span></label>
