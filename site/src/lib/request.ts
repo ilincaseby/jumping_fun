@@ -7,6 +7,7 @@ export interface RequestValues {
   date: string;
   locality: string;
   children: string;
+  ages: string;
   details: string;
 }
 export type RequestErrors = Partial<Record<keyof RequestValues, string>>;
@@ -28,6 +29,7 @@ export function validateRequest(values: RequestValues, today = localDate()): Req
   if (children && (!/^\d+$/.test(children) || !Number.isSafeInteger(Number(children)) || Number(children) < 1)) {
     errors.children = 'Introdu un număr întreg pozitiv sau lasă câmpul necompletat.';
   }
+  if (values.ages.length > 100) errors.ages = 'Folosește cel mult 100 de caractere pentru vârsta copiilor.';
   if (values.details.length > 1500) errors.details = 'Folosește cel mult 1.500 de caractere pentru detalii.';
   return errors;
 }
@@ -43,6 +45,7 @@ export function requestMessage(config: BusinessConfig, values: RequestValues): s
     `Data: ${date}`,
     `Localitate: ${values.locality.trim()}`,
     ...(values.children.trim() ? [`Număr de copii: ${Number(values.children)}`] : []),
+    ...(values.ages.trim() ? [`Vârsta copiilor: ${values.ages.trim()}`] : []),
     ...(values.details.trim() ? [`Detalii: ${values.details.trim()}`] : []),
     'Îmi puteți confirma disponibilitatea?',
   ].join('\n');

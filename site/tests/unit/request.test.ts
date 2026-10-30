@@ -5,7 +5,7 @@ import { localDate, requestMessage, whatsappRequestUrl, validateRequest, type Re
 
 const future = new Date();
 future.setFullYear(future.getFullYear() + 1);
-const values: RequestValues = { model: 'casa', date: localDate(future), locality: 'București', children: '', details: '' };
+const values: RequestValues = { model: 'casa', date: localDate(future), locality: 'București', children: '', ages: '', details: '' };
 
 test('valid optional fields remain optional', () => {
   assert.deepEqual(validateRequest(values), {});
@@ -50,7 +50,7 @@ test('child count is optional but must be a positive safe integer when present',
 });
 
 test('WhatsApp receives only a safely encoded draft for the configured verified destination', () => {
-  const data = { ...values, children: '8', details: 'Șț & detalii? #test\n<b>literal</b>' };
+  const data = { ...values, children: '8', ages: '4–8 ani & 10 ani', details: 'Șț & detalii? #test\n<b>literal</b>' };
   const url = new URL(whatsappRequestUrl(business, data));
   assert.equal(url.origin, 'https://wa.me');
   assert.equal(url.pathname, '/40767850085');
@@ -59,4 +59,21 @@ test('WhatsApp receives only a safely encoded draft for the configured verified 
   assert(!url.href.includes('<'));
   assert.throws(() => whatsappRequestUrl({ ...business, contact: { ...business.contact, verified: false } }, values), /verificat/);
   assert.throws(() => whatsappRequestUrl(business, { ...values, children: '-1' }), /invalide/);
+});
+
+test('ages accept optional free text independently of child count and omit blank values', () => {
+  for (const ages of ['', '   ', '6 ani', '4–8 ani', '3, 5 și 8 ani']) {
+    assert.deepEqual(validateRequest({ ...values, ages }), {});
+  }
+  assert(!requestMessage(business, { ...values, ages: '   ' }).includes('Vârsta copiilor'));
+  const message = requestMessage(business, { ...values, ages: ' 4–8 ani ' });
+  assert(message.includes('Vârsta copiilor: 4–8 ani\n'));
+  assert(!message.includes('Număr de copii'));
+});
+
+test('ages enforce the text length boundary and reject invalid messages', () => {
+  assert.deepEqual(validateRequest({ ...values, ages: 'a'.repeat(100) }), {});
+  const invalid = { ...values, ages: 'a'.repeat(101) };
+  assert(validateRequest(invalid).ages);
+  assert.throws(() => whatsappRequestUrl(business, invalid), /invalide/);
 });

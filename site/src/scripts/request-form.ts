@@ -34,7 +34,7 @@ if (form) {
       const value = data.get(key);
       return typeof value === 'string' ? value : '';
     };
-    return { model: read('model'), date: read('date'), locality: read('locality'), children: read('children'), details: read('details') };
+    return { model: read('model'), date: read('date'), locality: read('locality'), children: read('children'), ages: read('ages'), details: read('details') };
   };
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -43,7 +43,7 @@ if (form) {
     const list = summary.querySelector('ul')!;
     list.replaceChildren();
     status.textContent = '';
-    for (const key of ['model', 'date', 'locality', 'children', 'details'] as const) {
+    for (const key of ['model', 'date', 'locality', 'children', 'ages', 'details'] as const) {
       const field = form.elements.namedItem(key);
       const error = document.getElementById(`${key}-error`);
       if (!error || !(field instanceof HTMLElement)) throw new Error(`Câmp lipsă: ${key}`);
