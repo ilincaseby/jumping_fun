@@ -1,15 +1,9 @@
 ---
 import { Image } from 'astro:assets';
-import poster from '../assets/scene/slide-poster.png';
+import photo from '../assets/scene/patrula-home.webp';
 ---
-<figure class="scene" data-slide-scene data-scene-state="poster">
+<figure class="scene">
   <div class="scene-stage">
-    <Image class="scene-poster" src={poster} widths={[320, 640, 900]} sizes="(max-width: 700px) 90vw, 48vw" width={900} format="webp" quality={82} alt="Tobogan original ilustrativ, cu rampă galbenă, margini albastre și arc roșu. Nu este un model din catalog." loading="eager" fetchpriority="high" />
-    <canvas class="scene-canvas" aria-hidden="true"></canvas>
+    <Image class="scene-photo" src={photo} widths={[320, 640, 900]} sizes="(max-width: 700px) 90vw, 48vw" width={900} format="webp" quality={90} alt="Tobogan gonflabil Patrula Cățelușilor Uriaș XXXL, fotografiat frontal, cu arcade albastre, turn roșu și treaptă galbenă." loading="eager" fetchpriority="high" />
   </div>
-  <figcaption class="scene-status" data-scene-status role="status">Concept original, nu un model de închiriat.</figcaption>
-  <noscript><p class="scene-status">Imagine statică. Oferta și navigarea nu au nevoie de 3D.</p></noscript>
 </figure>
-<script>
-  import '../scripts/scene-loader';
-</script>

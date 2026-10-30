@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
-import { installWorkerContextLossControl } from './scene-fixtures';
 
 test('200 percent text scaling and browser visual zoom preserve access', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -22,82 +21,61 @@ test('200 percent text scaling and browser visual zoom preserve access', async (
   await session.send('Emulation.setPageScaleFactor', { pageScaleFactor: 1 });
 });
 
-test('scene context loss, restoration, pausing and repeated route visits remain safe', async ({ page }) => {
-  await installWorkerContextLossControl(page);
+test('static photo stays visible across motion preferences and repeated route visits', async ({ page }) => {
   await page.goto('/');
-  const scene = page.locator('[data-slide-scene]');
-  await expect(page.locator('[data-scene-toggle], .scene-controls')).toHaveCount(0);
-  await expect(scene).toHaveAttribute('data-scene-state', 'ready');
-  await expect(page.locator('canvas')).toHaveAttribute('data-settled', 'true');
-  await page.evaluate(() => {
-    if (!window.__jfTestWorker) throw new Error('The renderer did not create its worker.');
-    window.__jfTestWorker.postMessage({ __test: 'lose-context' });
-  });
-  await expect(scene).toHaveAttribute('data-scene-state', 'error');
-  await expect(page.locator('.scene-poster')).toHaveCSS('opacity', '1');
-  await expect(scene).toHaveAttribute('data-scene-state', 'ready');
+  const photo = page.locator('.scene-photo');
+  await expect(photo).toBeVisible();
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect(scene).toHaveAttribute('data-scene-state', 'poster');
+  await expect(photo).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await expect(scene).toHaveAttribute('data-scene-state', 'ready');
-  await expect(page.locator('[data-scene-status]')).toHaveText('Concept 3D original, nu un model de închiriat.');
+  await expect(photo).toBeVisible();
   await page.getByRole('link', { name: 'Catalog', exact: true }).click();
   await page.getByRole('link', { name: 'Acasă', exact: true }).click();
-  await expect(page.locator('canvas')).toHaveCount(1);
-  await expect(scene).toHaveAttribute('data-scene-state', 'ready');
+  await expect(photo).toBeVisible();
+  await expect(page.locator('canvas')).toHaveCount(0);
 });
 
-test('a failed dynamic scene chunk is explicit and the static page remains usable', async ({ page }) => {
-  await page.route(/\/scene\.worker[^/]*\.js/, (route) => route.abort());
+test('photo is transparent around the product and remains opaque inside it', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('[data-slide-scene]')).toHaveAttribute('data-scene-state', 'error');
-  await expect(page.locator('.scene-poster')).toBeVisible();
-  await page.getByRole('link', { name: 'Cere o ofertă' }).click();
-  await expect(page.locator('h1')).toContainText('Hai să pregătim');
+  const alpha = await page.locator('.scene-photo').evaluate(async (node) => {
+    const image = node as HTMLImageElement;
+    await image.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Cannot inspect image transparency.');
+    context.drawImage(image, 0, 0);
+    return [[0, 0], [0.95, 0.05], [0.05, 0.95], [0.95, 0.95], [0.5, 0.5], [0.5, 0.85]]
+      .map(([x, y]) => context.getImageData(Math.floor(x * canvas.width), Math.floor(y * canvas.height), 1, 1).data[3]);
+  });
+  expect(alpha).toEqual([0, 0, 0, 0, 255, 255]);
 });
 
-test('pointer movement cannot rotate or restart rendering after the landing', async ({ page }) => {
+test('photo does not move or animate over time or on pointer movement', async ({ page }) => {
   await page.goto('/');
-  const canvas = page.locator('canvas');
-  const scene = page.locator('[data-slide-scene]');
-  await expect(canvas).toHaveAttribute('data-settled', 'true', { timeout: 15_000 });
-  const before = await canvas.screenshot();
-  const count = await scene.getAttribute('data-render-count');
-  const bounds = await canvas.boundingBox();
-  if (!bounds) throw new Error('Missing canvas bounds.');
+  const photo = page.locator('.scene-photo');
+  await photo.evaluate((node) => (node as HTMLImageElement).decode());
+  const before = await photo.screenshot();
+  const bounds = await photo.boundingBox();
+  if (!bounds) throw new Error('Missing photo bounds.');
   await page.mouse.move(bounds.x + bounds.width * .2, bounds.y + 100);
   await page.mouse.move(bounds.x + bounds.width * .8, bounds.y + 100, { steps: 12 });
   await page.waitForTimeout(300);
-  expect(await scene.getAttribute('data-render-count')).toBe(count);
-  expect(await canvas.screenshot()).toEqual(before);
+  expect(await photo.screenshot()).toEqual(before);
+  expect(await page.locator('.scene').evaluate((node) => node.getAnimations({ subtree: true }).length)).toBe(0);
 });
 
-test('unsupported offscreen rendering keeps the explicit static fallback', async ({ page }) => {
-  await page.addInitScript(() => Object.defineProperty(HTMLCanvasElement.prototype, 'transferControlToOffscreen', { value: undefined }));
-  await page.goto('/');
-  await expect(page.locator('[data-slide-scene]')).toHaveAttribute('data-scene-state', 'error');
-  await expect(page.locator('.scene-poster')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Cere o ofertă' })).toBeVisible();
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await expect(page.locator('[data-slide-scene]')).toHaveAttribute('data-scene-state', 'error');
-  await expect(page.locator('[data-scene-status]')).toContainText('nu s-a putut încărca');
-});
-
-test('changing motion preferences during worker startup never hides the poster prematurely', async ({ page }) => {
-  await page.route(/\/scene\.worker[^/]*\.js/, async (route) => {
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-    await route.continue();
+test('photo and navigation do not depend on canvas or worker support', async ({ page }) => {
+  await page.addInitScript(() => {
+    HTMLCanvasElement.prototype.getContext = () => { throw new Error('Canvas unavailable'); };
+    Object.defineProperty(window, 'Worker', { value: undefined });
   });
   await page.goto('/');
-  const scene = page.locator('[data-slide-scene]');
-  await expect(scene).toHaveAttribute('data-renderer', 'worker');
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await expect(page.locator('.scene-poster')).toHaveCSS('opacity', '1');
-  await expect(scene).not.toHaveAttribute('data-scene-state', 'ready');
-  await expect(scene).toHaveAttribute('data-scene-state', 'ready', { timeout: 15_000 });
+  await expect(page.locator('.scene-photo')).toBeVisible();
+  await page.getByRole('link', { name: 'Cere o ofertă' }).click();
+  await expect(page.locator('h1')).toContainText('Hai să pregătim');
 });
 
 test('maximum accepted request text and absent optional values do not overflow', async ({ page }) => {
@@ -126,7 +104,7 @@ test('capture the final static and interactive layouts at required widths', asyn
     for (const [name, route] of [['home', '/'], ['catalog', '/tobogane/'], ['gallery', '/galerie/'], ['offer', '/oferta/']]) {
       await page.goto(route);
       await page.evaluate(() => document.fonts.ready);
-      if (route === '/') await expect(page.locator('canvas')).toHaveAttribute('data-settled', 'true');
+      if (route === '/') await page.locator('.scene-photo').evaluate((node) => (node as HTMLImageElement).decode());
       if (route === '/tobogane/') await expect(page.locator('[data-carousel]')).toHaveAttribute('data-selected', 'casa');
       await page.evaluate(() => {
         if (document.activeElement instanceof HTMLElement) document.activeElement.blur();

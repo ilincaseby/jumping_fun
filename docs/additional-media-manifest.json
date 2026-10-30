@@ -32,6 +32,20 @@
     "quality": "Lizibil la dimensiunea cardului; nu este folosit drept fotografie de eveniment.",
     "alt": "Patrula Cățelușilor Uriaș XXXL, fotografiat frontal pe fundal alb."
   },
+  "homepagePhoto": {
+    "id": "patrula",
+    "source": "../site/src/assets/products/patrula-xxxl.jpg",
+    "destination": "../site/src/assets/scene/patrula-home.webp",
+    "requestedAt": "2026-10-30",
+    "sourceIdentification": "Aceeași fotografie ca atașamentul image-1.jpg furnizat de utilizator.",
+    "processing": "Eliminare locală a albului conectat la marginile imaginii (canale RGB >= 230, diferență maximă 25); mască netezită 0,5 px, decontaminare alb la margine, decupare cu 12 px spațiu transparent. WebP lossless, fără vectorizare sau generare externă.",
+    "width": 851,
+    "height": 803,
+    "originalChanged": false,
+    "markingsPreserved": true,
+    "rightsBasis": "Copie derivată din fotografia patrula deja aprobată în acest manifest, nu material nou.",
+    "display": "Static, contain, fundal transparent; variante responsive WebP generate de Astro."
+  },
   "galleryAssets": [
     {"id":"gallery-01","file":"3415fcff-5bad-4f91-997a-8d010fa7470e.JPG","width":2048,"height":1536},
     {"id":"gallery-02","file":"63e89327-aeae-4648-b759-1b90a59112da.JPG","width":2048,"height":1536},
