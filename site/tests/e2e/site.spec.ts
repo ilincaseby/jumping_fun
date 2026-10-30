@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test';
-import { blockWorkerWebGL } from './scene-fixtures';
 
 test('homepage prioritizes the catalog without duplicating its model picker', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -159,7 +158,7 @@ test('without JavaScript all static content, models and navigation remain availa
   const page = await context.newPage();
   await page.goto('/');
   await expect(page.locator('h1')).toContainText('Bucurie');
-  await expect(page.locator('.scene-poster')).toBeVisible();
+  await expect(page.locator('.scene-photo')).toBeVisible();
   await page.getByRole('link', { name: 'Vezi catalogul', exact: true }).click();
   await expect(page.locator('.product-slide')).toHaveCount(7);
   await page.getByRole('link', { name: 'Unicorn', exact: true }).click();
@@ -167,7 +166,7 @@ test('without JavaScript all static content, models and navigation remain availa
   await context.close();
 });
 
-test('reduced motion and save-data keep the poster without downloading the scene', async ({ browser, baseURL }) => {
+test('reduced motion and save-data keep the static photo without downloading a renderer', async ({ browser, baseURL }) => {
   for (const saveData of [false, true]) {
     const context = await browser.newContext({ reducedMotion: saveData ? 'no-preference' : 'reduce', baseURL });
     if (saveData) await context.addInitScript(() => Object.defineProperty(navigator, 'connection', { value: { saveData: true } }));
@@ -175,36 +174,29 @@ test('reduced motion and save-data keep the poster without downloading the scene
     const sceneRequests: string[] = [];
     page.on('request', (r) => { if (/\/scene[.-][^/]+\.js/.test(r.url())) sceneRequests.push(r.url()); });
     await page.goto('/');
-    await expect(page.locator('[data-slide-scene]')).toHaveAttribute('data-scene-state', 'poster');
-    await expect(page.locator('.scene-poster')).toBeVisible();
+    await expect(page.locator('.scene-photo')).toBeVisible();
+    await expect(page.locator('canvas')).toHaveCount(0);
     await page.waitForTimeout(500);
     expect(sceneRequests).toEqual([]);
     await context.close();
   }
 });
 
-test('WebGL failure displays an explicit static fallback without blocking the CTA', async ({ page }) => {
-  await blockWorkerWebGL(page);
-  await page.goto('/');
-  await expect(page.locator('[data-slide-scene]')).toHaveAttribute('data-scene-state', 'error');
-  await expect(page.locator('[data-scene-status]')).toContainText('nu s-a putut încărca');
-  await expect(page.getByRole('link', { name: 'Cere o ofertă' })).toBeVisible();
-});
-
-test('scene is real geometry, settles, respects budgets, and is absent on other routes', async ({ page }) => {
-  await page.goto('/');
-  const scene = page.locator('[data-slide-scene]');
-  await expect(scene).toHaveAttribute('data-scene-state', 'ready');
-  await expect(scene).toHaveAttribute('data-renderer', 'worker');
-  await expect(page.locator('canvas')).toHaveAttribute('data-settled', 'true', { timeout: 10_000 });
-  expect(Number(await scene.getAttribute('data-triangles'))).toBeLessThanOrEqual(25000);
-  expect(Number(await scene.getAttribute('data-draw-calls'))).toBeLessThanOrEqual(20);
-  expect(Number(await scene.getAttribute('data-pixel-ratio'))).toBeLessThanOrEqual(1.5);
+test('homepage uses the real static photo without loading a renderer on any route', async ({ page }) => {
   const requests: string[] = [];
   page.on('request', (r) => requests.push(r.url()));
+  await page.goto('/');
+  const photo = page.locator('.scene-photo');
+  await expect(photo).toBeVisible();
+  await expect(photo).toHaveAttribute('alt', /Patrula Cățelușilor Uriaș XXXL/);
+  await expect(photo).toHaveAttribute('src', /patrula-home/);
+  await expect(photo).toHaveAttribute('loading', 'eager');
+  await expect(page.locator('canvas')).toHaveCount(0);
+  await expect(page.locator('.scene')).not.toContainText('Concept');
   await page.goto('/galerie/');
   expect(requests.some((url) => /\/scene[.-][^/]+\.js/.test(url))).toBe(false);
   await expect(page.locator('canvas')).toHaveCount(0);
+  await expect(page.locator('.scene-photo')).toHaveCount(0);
 });
 
 test('missing photos surface a message and unknown products are not silently accepted', async ({ page }) => {

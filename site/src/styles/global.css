@@ -113,12 +113,7 @@ p { line-height: 1.6; overflow-wrap: anywhere; }
 .scene { position: relative; width: 100%; min-width: 0; }
 .scene-stage { width: 100%; aspect-ratio: 1.16; position: relative; isolation: isolate; }
 .scene-stage::before { content: ""; position: absolute; inset: 20% 5% 2%; border-radius: 50%; background: radial-gradient(ellipse, rgb(255 255 255 / .65), transparent 68%); z-index: -1; }
-.scene-poster, .scene-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-.scene-canvas { opacity: 0; transition: opacity 160ms ease; pointer-events: none; }
-.scene[data-scene-state="ready"] .scene-canvas { opacity: 1; }
-.scene[data-scene-state="ready"] .scene-poster { opacity: 0; }
-.scene-poster { transition: opacity 160ms ease; }
-.scene-status { text-align: center; max-width: 36rem; margin-inline: auto; font-size: .75rem; color: var(--color-muted); }
+.scene-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .page-heading { padding-top: 2rem; display: flex; justify-content: space-between; gap: 1rem 3rem; align-items: end; }
 .page-heading h1 { font-size: clamp(2.25rem, 4vw, 3.5rem); }
 .page-heading p { max-width: 29rem; color: var(--color-muted); }
@@ -238,7 +233,6 @@ p { line-height: 1.6; overflow-wrap: anywhere; }
   .hero-copy > .caption { font-size: .75rem; }
   .scene { max-width: 25rem; margin-top: .5rem; }
   .scene-stage { aspect-ratio: 1.4; }
-  .scene-status { font-size: .6875rem; max-width: 19rem; }
   .page-heading { padding-top: 1.25rem; flex-direction: column; align-items: start; gap: .75rem; }
   .page-heading h1 { font-size: 2.5rem; }
   .page-heading p { font-size: .875rem; }
@@ -265,7 +259,7 @@ p { line-height: 1.6; overflow-wrap: anywhere; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; }
-  .gummy-link, .model-chip, .button, .icon-button, .scene-canvas, .scene-poster { transition: none; }
+  .gummy-link, .model-chip, .button, .icon-button { transition: none; }
   .gummy-link:active, .model-chip:active, .button:active, .icon-button:active { transform: none; }
   .product-card { transform: none !important; filter: none !important; }
   .catalog-cta::before { animation: none; }

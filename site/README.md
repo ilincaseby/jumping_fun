@@ -80,32 +80,15 @@ Galeria include 24 de fotografii noi și cele 3 existente, cu paginare statică 
 
 Pentru a înlocui o fotografie: adaugă fișierul, schimbă importul și alt text-ul din modulul media, actualizează proveniența și drepturile, apoi reconstruiește. Nu hotlink-ui URL-uri temporare.
 
-## 3D și motion
+## Fotografia statică de pe homepage și motion
 
-- [src/lib/three/spec.ts](./src/lib/three/spec.ts): dimensiuni și culori ale modelului original.
-- [src/lib/three/model.ts](./src/lib/three/model.ts): geometrie procedurală, cusături, trepte și plasă; geometriile sunt combinate pe materiale.
-- [src/lib/three/scene.ts](./src/lib/three/scene.ts): cameră și renderer OffscreenCanvas, executate în worker.
-- [src/lib/three/scene.worker.ts](./src/lib/three/scene.worker.ts): construirea modelului, pregătirea shader-elor și randarea în afara firului UI.
-- [src/lib/three/scene-controller.ts](./src/lib/three/scene-controller.ts): puntea cu DOM-ul, redimensionare, erori și lifecycle.
-- [src/lib/three/scene-protocol.ts](./src/lib/three/scene-protocol.ts): mesaje tipate între pagină și worker.
-- [src/scripts/motion/landing.ts](./src/scripts/motion/landing.ts): cădere, impact, compresie elastică, două reveniri mici descrescătoare și repaus.
-- [src/scripts/scene-loader.ts](./src/scripts/scene-loader.ts): poster întâi, import dinamic, vizibilitate, preferințe, încărcare eșuată și fallback.
-- [src/components/SlideScene.astro](./src/components/SlideScene.astro): poster și container; numai pe homepage.
+[SlideScene.astro](./src/components/SlideScene.astro) afișează fotografia reală Patrula Cățelușilor Uriaș XXXL, fără canvas, animație de intrare sau încărcare Three.js/worker. Imaginea rămâne statică inclusiv fără JavaScript și indiferent de preferințele motion/save-data.
 
-Este un model **original ilustrativ**, nu o replică de închiriat. DPR este limitat la 1,5; randarea se oprește la repaus și când scena/tab-ul nu se vede. Nu există un loop permanent și **nu mai există rotație sau reacție la mișcarea mouse-ului**. Se păstrează numai intrarea verticală, la inițializare.
+[patrula-home.webp](./src/assets/scene/patrula-home.webp) este copia transparentă a fotografiei existente [patrula-xxxl.jpg](./src/assets/products/patrula-xxxl.jpg), identificată și în atașamentul utilizatorului din 30 octombrie 2026. Fundalul alb exterior a fost eliminat local, cu margini netezite și spațiul exterior decupat; însemnele și detaliile albe din produs sunt păstrate. Originalul și fotografia din catalog nu sunt modificate. Proveniența și procesarea sunt în [manifestul suplimentar](../docs/additional-media-manifest.json).
 
-Nu există buton de comutare manuală între 3D și imagine. Posterul/fallback-ul sunt gestionate automat după preferințele dispozitivului și disponibilitatea rendererului.
+WebP cu transparență păstrează detaliile fotografiei fără vectorizare SVG. Astro generează variante responsive; fundalul paginii și lumina difuză din spatele imaginii rămân vizibile. Pentru înlocuire, pregătește o copie transparentă, actualizează importul, alt text-ul și manifestul, apoi reconstruiește.
 
-Este un **Web Worker din browser**, nu un Cloudflare Worker/backend. Workerul deține Three.js și resursele GPU; pagina primește numai starea și câteva măsurători, nu actualizări DOM în fiecare frame. Contextul pierdut, workerul eșuat și limita de inițializare au fallback explicit. Posterul rămâne pe reduced-motion/save-data/fără WebGL sau fără suport pentru `transferControlToOffscreen`. Nu se revine în tăcere la randare grea pe firul UI.
-
-Posterul este randat din model, nu un obiect diferit. După modificarea geometriei, pornește preview-ul și rulează:
-
-```sh
-npx tsx scripts/capture-poster.ts http://127.0.0.1:4327/
-npm run build
-```
-
-Scriptul necesită browserul Playwright disponibil. Generează [src/assets/scene/slide-poster.png](./src/assets/scene/slide-poster.png); Astro livrează variante WebP. Scena live nu este încărcată pe celelalte rute.
+Codul 3D, posterul și scripturile istorice de captură/profilare rămân în repository, dar nu mai sunt conectate la homepage. `capture-poster.ts` și `measure-preview.ts` presupun scena veche și nu se folosesc pentru fotografia statică.
 
 Fonturile Fredoka și DM Sans sunt self-hosted; copiile licențelor SIL OFL sunt în [public/licenses](./public/licenses/).
 
@@ -125,7 +108,7 @@ npm run check:release
 
 Ultima comandă **trebuie încă să eșueze** deoarece datele juridice, domeniul și condițiile comerciale complete nu au fost furnizate. Testele Playwright pornesc propriul server; portul implicit este 4322. Dacă este ocupat de alt proiect, folosește `PLAYWRIGHT_PORT=4326 npm run test:e2e`, fără să oprești serviciul celuilalt proiect. Dacă browserul lipsește, instalează-l cu `npx playwright install chromium`.
 
-Testele acoperă configurația, blocarea publicării, valorile exacte din catalog, validarea opțională a numărului de copii, URL-ul WhatsApp și codificarea textului, paginarea galeriei, geometria/aterizarea, rutarea, swipe/tastatură, dialogul galeriei, FAQ, lipsa JS, reduced-motion/save-data, lipsa WebGL, încărcări eșuate și dimensiunile 1440/768/390/320. Navigarea WhatsApp este interceptată în teste: nu se face nicio solicitare reală către acel serviciu și nu se trimite niciun mesaj.
+Testele acoperă configurația, blocarea publicării, valorile exacte din catalog, validarea opțională a numărului de copii, URL-ul WhatsApp și codificarea textului, paginarea galeriei, geometria/aterizarea istorică (unitar), rutarea, swipe/tastatură, dialogul galeriei, FAQ, lipsa JS, reduced-motion/save-data, transparența fotografiei, absența animației și a rendererului, încărcări eșuate și dimensiunile 1440/768/390/320. Navigarea WhatsApp este interceptată în teste: nu se face nicio solicitare reală către acel serviciu și nu se trimite niciun mesaj.
 
 Capturile implementării sunt scrise în [docs/previews/implementation](../docs/previews/implementation/) de testul vizual. Planul standalone din [.tsupgrader/runtime-validation/eval-plan.json](./.tsupgrader/runtime-validation/eval-plan.json) reia comenzile proiectului; nu creează un workflow de upgrade.
 
