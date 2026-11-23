@@ -52,4 +52,6 @@ export const galleryMedia = [
   { ...supplied('detaliu', detaliu, 'Detaliu al intrării și al materialului gonflabilului.', 'photos/image copy.png'), caption: 'Mai aproape de detalii.' },
 ] as const;
 
+export const galleryPageSize = 9;
+
 export const publicationMedia = [...Object.values(productMedia), ...galleryMedia];

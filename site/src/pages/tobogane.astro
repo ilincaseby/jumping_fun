@@ -5,8 +5,10 @@ import ModelPicker from '../components/ModelPicker.astro';
 import Icon from '../components/Icon.astro';
 import { catalog, defaultProduct, formatPrice, formatDimension, formatAges, priceDisclaimer } from '../content/catalog';
 import { productMedia } from '../content/media';
+import { business } from '../config/business';
+const area = business.serviceArea.join(' și ');
 ---
-<SiteLayout title="Alege locul lor de joacă" description="Tobogane gonflabile de închiriat: fotografii, prețuri, dimensiuni și vârste. Cere disponibilitatea pe WhatsApp." active="/tobogane/">
+<SiteLayout title="Catalog tobogane gonflabile: modele și prețuri" description={`Compară modelele de tobogane gonflabile de închiriat în ${area}: fotografii, tarife, dimensiuni și vârste recomandate.`} active="/tobogane/">
   <section class="catalog" aria-labelledby="catalog-title">
     <div class="page-width">
       <div class="page-heading">
@@ -25,7 +27,7 @@ import { productMedia } from '../content/media';
               <article class="product-slide" id={`model-${product.id}`} data-product={product.id} aria-label={`${index + 1} din ${catalog.length}: ${product.name}`}>
                 <div class="product-card">
                   <div class="product-media" data-media data-kind="catalog">
-                    <Image src={media.image} alt={media.alt} widths={[320, 640, 960]} sizes="(max-width: 700px) 76vw, 460px" width={960} format="webp" quality={82} loading={product.id === defaultProduct ? 'eager' : 'lazy'} />
+                    <Image src={media.image} alt={media.alt} widths={[320, 640, 960]} sizes="(max-width: 700px) calc(min(18.375rem, 76vw) - 1.8rem), 460px" width={960} format="webp" quality={82} loading={product.id === defaultProduct ? 'eager' : 'lazy'} fetchpriority={product.id === defaultProduct ? 'high' : undefined} />
                     <p class="media-error" role="status">Fotografia nu este disponibilă. Poți cere detalii despre acest model.</p>
                   </div>
                   <div class="product-copy">

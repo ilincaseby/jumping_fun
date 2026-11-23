@@ -3,8 +3,8 @@ import { Image, getImage } from 'astro:assets';
 import type { GetStaticPaths, Page } from 'astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import Icon from '../../components/Icon.astro';
-import { galleryMedia } from '../../content/media';
-export const getStaticPaths = (({ paginate }) => paginate(galleryMedia, { pageSize: 9 })) satisfies GetStaticPaths;
+import { galleryMedia, galleryPageSize } from '../../content/media';
+export const getStaticPaths = (({ paginate }) => paginate(galleryMedia, { pageSize: galleryPageSize })) satisfies GetStaticPaths;
 interface Props { page: Page<(typeof galleryMedia)[number]> }
 const { page } = Astro.props;
 const photos = await Promise.all(page.data.map(async (media) => ({
@@ -12,7 +12,7 @@ const photos = await Promise.all(page.data.map(async (media) => ({
   full: await getImage({ src: media.image, width: Math.min(1600, media.image.width), format: 'webp', quality: 85 }),
 })));
 ---
-<SiteLayout title={page.currentPage === 1 ? 'Din poze, în lumea lor' : `Galerie — pagina ${page.currentPage}`} description="Toboganele noastre în imagini: modele, detalii și momente de la joacă, în interior și în aer liber." active="/galerie/" surface="paper">
+<SiteLayout title={page.currentPage === 1 ? 'Galerie foto cu tobogane gonflabile' : `Galerie tobogane gonflabile: pagina ${page.currentPage}`} description={`Vezi fotografiile ${page.start + 1}–${page.end + 1} din galeria Jumping Fun: tobogane gonflabile în interior și în aer liber.`} active="/galerie/" surface="paper">
   <section class="page-width" aria-labelledby="gallery-title">
     <div class="page-heading">
       <h1 id="gallery-title">Din poze,<br />în lumea lor.</h1>

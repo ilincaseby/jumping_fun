@@ -49,6 +49,30 @@ test('public-facing routes have verified contacts and no demo copy while launch 
   }
 });
 
+test('sitemap and search metadata use canonical production URLs even on preview', async ({ page, request }) => {
+  const origin = 'https://www.jumping-fun.com';
+  const sitemap = await request.get('/sitemap.xml');
+  expect(sitemap.ok()).toBe(true);
+  const urls = [...(await sitemap.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((entry) => entry[1]);
+  expect(urls).toEqual(['/', '/tobogane/', '/galerie/', '/galerie/2/', '/galerie/3/', '/informatii/', '/oferta/', '/confidentialitate/', '/conditii-inchiriere/'].map((path) => origin + path));
+  expect(await (await request.get('/robots.txt')).text()).toContain('Disallow: /');
+
+  await page.goto('/oferta/?model=casa');
+  await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href', `${origin}/oferta/`);
+  await page.goto('/galerie/3/');
+  await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href', `${origin}/galerie/3/`);
+  await expect(page).toHaveTitle(/Galerie tobogane gonflabile: pagina 3/);
+  const shareImage = new URL(await page.locator('meta[property="og:image"]').getAttribute('content') ?? '');
+  expect(shareImage.origin).toBe(origin);
+  const asset = await request.get(shareImage.pathname);
+  expect(asset.ok()).toBe(true);
+  expect(asset.headers()['content-type']).toContain('image/jpeg');
+
+  await page.goto('/404.html');
+  await expect(page.locator('link[rel=canonical]')).toHaveCount(0);
+  await expect(page.locator('meta[name=robots]')).toHaveAttribute('content', /noindex/);
+});
+
 test('compact routes have no horizontal overflow at all required widths', async ({ page }) => {
   // 308px also covers a 320px window with a persistent 12px scrollbar.
   for (const width of [1440, 768, 390, 320, 308]) {

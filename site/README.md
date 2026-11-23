@@ -65,6 +65,12 @@ Numărul de copii este opțional; dacă este completat, trebuie să fie un într
 
 Vârsta sau intervalul de vârstă este un câmp text separat, opțional, de cel mult 100 de caractere (ex.: „6 ani”, „4–8 ani”). Poate fi completat independent de numărul de copii; dacă rămâne gol, nu apare în mesaj. Nu se cer nume sau date de naștere.
 
+## SEO și domeniu
+
+Domeniul canonic este `https://www.jumping-fun.com`. [SiteLayout.astro](./src/layouts/SiteLayout.astro) folosește titlurile și descrierile din fiecare pagină și emite URL-uri canonice fără parametri, plus metadate de distribuire. `/sitemap.xml` listează paginile canonice, inclusiv paginarea galeriei, fără pagina 404. `robots.txt` îl anunță abia când verificarea de publicare trece.
+
+După aprobarea lansării, configurează în Cloudflare HTTPS și o redirecționare permanentă de la `jumping-fun.com` la `www.jumping-fun.com`, păstrând calea și parametrii. Verifică apoi că `robots.txt` permite crawlul și trimite `https://www.jumping-fun.com/sitemap.xml` în Google Search Console.
+
 ## Fotografii și drepturi
 
 - Fișierele folosite: [src/assets/products](./src/assets/products/) și [src/assets/gallery](./src/assets/gallery/).

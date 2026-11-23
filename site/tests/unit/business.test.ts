@@ -12,10 +12,11 @@ test('confirmed phone and WhatsApp work without inventing legal data or email', 
   assert.equal(businessStructuredData(business), null);
 });
 
-test('release still rejects missing legal data and the missing domain', () => {
+test('release accepts the production domain but still rejects missing legal data', () => {
   const issues = publicationIssues(business, publicationMediaRights);
   assert(issues.some((issue) => issue.includes('CUI')));
-  assert(issues.some((issue) => issue.includes('HTTPS')));
+  assert(!issues.some((issue) => issue.includes('HTTPS') || issue.includes('Domeniu')));
+  assert(publicationIssues({ ...business, siteUrl: null }, publicationMediaRights).some((issue) => issue.includes('HTTPS')));
   assert(!issues.some((issue) => issue.includes('Media ')));
   assert(publicationIssues(business, [{ id: 'unapproved', displayApproved: true, thirdPartyCleared: false }]).some((issue) => issue.includes('Media unapproved:')));
 });

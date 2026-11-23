@@ -1,4 +1,5 @@
 ---
+import { getImage } from 'astro:assets';
 import '@fontsource-variable/fredoka';
 import '@fontsource-variable/dm-sans';
 import '../styles/global.css';
@@ -8,11 +9,15 @@ import { business } from '../config/business';
 import { businessStructuredData } from '../lib/business';
 import { publicationIssues } from '../lib/publication';
 import { publicationMediaRights } from '../content/publication-media';
-interface Props { title: string; description: string; active?: string; surface?: 'sky' | 'paper' }
-const { title, description, active, surface = 'sky' } = Astro.props;
-const canonical = business.siteUrl ? new URL(Astro.url.pathname, business.siteUrl).href : null;
-const structuredData = businessStructuredData(business);
+import sharePhoto from '../assets/products/patrula-xxxl.jpg';
+interface Props { title: string; description: string; active?: string; surface?: 'sky' | 'paper'; noindex?: boolean }
+const { title, description, active, surface = 'sky', noindex = false } = Astro.props;
+const pageTitle = `${title} — ${business.brand}`;
+const canonical = Astro.site && !noindex ? new URL(Astro.url.pathname, Astro.site).href : null;
+const shareImage = canonical ? await getImage({ src: sharePhoto, width: 1000, format: 'jpeg', quality: 82 }) : null;
+const shareUrl = shareImage && canonical ? new URL(shareImage.src, canonical).href : null;
 const readyForPublication = publicationIssues(business, publicationMediaRights).length === 0;
+const structuredData = active === '/' && readyForPublication ? businessStructuredData(business) : null;
 ---
 <!doctype html>
 <html lang="ro">
@@ -22,14 +27,22 @@ const readyForPublication = publicationIssues(business, publicationMediaRights).
     <meta name="theme-color" content="#E5F4FF" />
     <meta name="color-scheme" content="light" />
     <meta name="description" content={description} />
-    <meta name="robots" content={readyForPublication ? 'index, follow' : 'noindex, nofollow'} />
-    <title>{title} — {business.brand}</title>
+    <meta name="robots" content={!readyForPublication ? 'noindex, nofollow' : noindex ? 'noindex, follow' : 'index, follow'} />
+    <title>{pageTitle}</title>
     {canonical && <link rel="canonical" href={canonical} />}
-    <meta property="og:title" content={`${title} — ${business.brand}`} />
+    <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ro_RO" />
+    <meta property="og:site_name" content={business.brand} />
     {canonical && <meta property="og:url" content={canonical} />}
+    {shareUrl && shareImage && <>
+      <meta property="og:image" content={shareUrl} />
+      <meta property="og:image:width" content={shareImage.attributes.width} />
+      <meta property="og:image:height" content={shareImage.attributes.height} />
+      <meta property="og:image:alt" content="Toboganul gonflabil Patrula Cățelușilor Uriaș XXXL" />
+      <meta name="twitter:card" content="summary_large_image" />
+    </>}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />}
   </head>
