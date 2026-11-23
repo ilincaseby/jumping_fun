@@ -51,7 +51,7 @@ Comanda construiește site-ul în starea curentă. Pentru lansarea finală folos
 Brandul, identitatea juridică, telefonul, WhatsApp, e-mailul, URL-ul, rețelele sociale, zona și programul sunt importate din acest fișier. Header-ul, SEO, textul ofertei, zona deservită și paginile de contact folosesc aceeași configurație.
 
 - Telefonul și WhatsApp au fost confirmate de utilizator și sunt active; ambele folosesc aceeași constantă `phone`.
-- `status: 'verified'` nu este suficient pentru lansare: `publicationIssues()` verifică separat datele juridice, domeniul, condițiile comerciale și drepturile media. Cât timp există lipsuri, paginile rămân `noindex, nofollow`, iar robots exclude indexarea.
+- `status: 'verified'` nu este suficient pentru lansarea validată: `publicationIssues()` verifică separat datele juridice, domeniul, condițiile comerciale și drepturile media. Setarea de indexare nu ocolește `build:release` și nu activează datele structurate incomplete.
 - Contactele sunt inactive pentru configurații neverificate. E-mailul este `null` și nu se afișează; formularul nu folosește e-mail.
 - Lipsurile sunt `null` sau enumerate în `missingFields`, nu înlocuite cu identificatori fiscali/numere inventate.
 - JSON-LD nu se emite pentru business demo sau cu date obligatorii lipsă.
@@ -67,7 +67,9 @@ Vârsta sau intervalul de vârstă este un câmp text separat, opțional, de cel
 
 ## SEO și domeniu
 
-Domeniul canonic este `https://www.jumping-fun.com`. [SiteLayout.astro](./src/layouts/SiteLayout.astro) folosește titlurile și descrierile din fiecare pagină și emite URL-uri canonice fără parametri, plus metadate de distribuire. `/sitemap.xml` listează paginile canonice, inclusiv paginarea galeriei, fără pagina 404. `robots.txt` îl anunță abia când verificarea de publicare trece.
+Domeniul canonic este `https://www.jumping-fun.com`. [SiteLayout.astro](./src/layouts/SiteLayout.astro) folosește titlurile și descrierile din fiecare pagină și emite URL-uri canonice fără parametri, plus metadate de distribuire. `/sitemap.xml` listează paginile canonice, inclusiv paginarea galeriei, fără pagina 404.
+
+Pentru a permite indexarea site-ului public, setează `JUMPING_FUN_INDEXABLE=true` **doar în mediul de build Production din Cloudflare**, apoi reconstruiește și redeployează. Echivalentul local este `JUMPING_FUN_INDEXABLE=true npm run build`. Build-ul indexabil afișează sitemap-ul în `robots.txt`; pagina 404 rămâne `noindex`. Fără variabilă, site-ul rămâne `noindex, nofollow`, iar `robots.txt` blochează crawlul. Nu seta variabila pentru build-urile Preview și nu publica artefactul indexabil pe un domeniu de preview.
 
 După aprobarea lansării, configurează în Cloudflare HTTPS și o redirecționare permanentă de la `jumping-fun.com` la `www.jumping-fun.com`, păstrând calea și parametrii. Verifică apoi că `robots.txt` permite crawlul și trimite `https://www.jumping-fun.com/sitemap.xml` în Google Search Console.
 

@@ -35,11 +35,12 @@ test('catalog attention cue is finite and respects reduced motion', async ({ pag
   await expect(cta).toHaveCSS('color', 'rgb(18, 49, 75)');
 });
 
-test('public-facing routes have verified contacts and no demo copy while launch checks remain blocked', async ({ page }) => {
+test('public-facing routes have verified contacts and respect the build indexing policy', async ({ page }) => {
+  const robots = process.env.JUMPING_FUN_INDEXABLE === 'true' ? 'index, follow' : 'noindex, nofollow';
   for (const route of ['/', '/tobogane/', '/galerie/', '/galerie/2/', '/informatii/', '/oferta/', '/confidentialitate/', '/conditii-inchiriere/']) {
     await page.goto(route);
     await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('meta[name=robots]')).toHaveAttribute('content', 'noindex, nofollow');
+    await expect(page.locator('meta[name=robots]')).toHaveAttribute('content', robots);
     await expect(page.locator('a[href="tel:+40767850085"]').first()).toBeVisible();
     await expect(page.locator('a[href="https://wa.me/40767850085"]').first()).toBeVisible();
     await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
@@ -55,7 +56,9 @@ test('sitemap and search metadata use canonical production URLs even on preview'
   expect(sitemap.ok()).toBe(true);
   const urls = [...(await sitemap.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((entry) => entry[1]);
   expect(urls).toEqual(['/', '/tobogane/', '/galerie/', '/galerie/2/', '/galerie/3/', '/informatii/', '/oferta/', '/confidentialitate/', '/conditii-inchiriere/'].map((path) => origin + path));
-  expect(await (await request.get('/robots.txt')).text()).toContain('Disallow: /');
+  expect(await (await request.get('/robots.txt')).text()).toBe(process.env.JUMPING_FUN_INDEXABLE === 'true'
+    ? `User-agent: *\nAllow: /\n\nSitemap: ${origin}/sitemap.xml\n`
+    : 'User-agent: *\nDisallow: /\n');
 
   await page.goto('/oferta/?model=casa');
   await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href', `${origin}/oferta/`);
