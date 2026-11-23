@@ -5,10 +5,11 @@ const questions = [
   ['Cum verific disponibilitatea?', 'Alege un model și indică data și localitatea. Disponibilitatea se confirmă în ofertă, nu prin completarea formularului.'],
   ['Ce include tariful afișat?', 'Durata închirierii, transportul și serviciile incluse se confirmă în oferta pentru evenimentul tău.'],
   ['De cât spațiu am nevoie?', 'Trimite detalii despre loc și model. Spațiul de montaj și cerințele de utilizare se confirmă pentru echipamentul ales. Cotele din imagini nu reprezintă automat spațiul minim necesar.'],
+  ['Pot închiria un tobogan gonflabil de interior?', 'Da, avem opțiuni atât pentru interior, cât și pentru exterior. Dacă organizezi iarna o petrecere în sală, trimite-ne lungimea și lățimea spațiului liber, înălțimea până la cel mai jos obstacol și dimensiunile accesului. Confirmăm în ofertă ce model încape.', 'montaj-interior'],
   ['Ce facem dacă vremea se schimbă?', 'Cere condițiile pentru vreme nefavorabilă, anulare sau schimbarea datei înainte de a confirma oferta.'],
 ];
 ---
-<SiteLayout title="De la idee la cererea ta" description="Cum pregătești cererea de ofertă și ce detalii trebuie confirmate înainte de închiriere." active="/informatii/" surface="paper">
+<SiteLayout title="Întrebări despre închirierea toboganelor gonflabile" description="Află ce dimensiuni să măsori pentru montarea unui tobogan gonflabil în interior și ce detalii trebuie confirmate înainte de închiriere." active="/informatii/" surface="paper">
   <section class="page-width" aria-labelledby="info-title">
     <div class="page-heading"><h1 id="info-title">De la „ce-ar fi?”<br />la cererea ta.</h1></div>
     <div class="info-layout">
@@ -26,7 +27,7 @@ const questions = [
       </div>
       <div>
         <h2 class="faq-title">Întrebări utile</h2>
-        {questions.map(([question, answer]) => <details class="faq"><summary>{question}</summary><p>{answer}</p></details>)}
+        {questions.map(([question, answer, id]) => <details class="faq" id={id}><summary>{question}</summary><p>{answer}</p></details>)}
       </div>
     </div>
   </section>

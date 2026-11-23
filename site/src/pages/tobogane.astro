@@ -8,12 +8,12 @@ import { productMedia } from '../content/media';
 import { business } from '../config/business';
 const area = business.serviceArea.join(' și ');
 ---
-<SiteLayout title="Catalog tobogane gonflabile: modele și prețuri" description={`Compară modelele de tobogane gonflabile de închiriat în ${area}: fotografii, tarife, dimensiuni și vârste recomandate.`} active="/tobogane/">
+<SiteLayout title="Tobogane gonflabile de interior și exterior: catalog" description={`Compară toboganele gonflabile de închiriat în ${area}: fotografii, prețuri și dimensiuni, ca să alegi un model pentru sală sau exterior.`} active="/tobogane/">
   <section class="catalog" aria-labelledby="catalog-title">
     <div class="page-width">
       <div class="page-heading">
         <h1 id="catalog-title">Alege locul lor<br /> de joacă.</h1>
-        <p>Un model în centru. Restul, la un swipe distanță.</p>
+        <p>Compară dimensiunile modelelor și vezi ce opțiuni ai pentru o petrecere în sală sau în aer liber.</p>
       </div>
       <ModelPicker local selected={defaultProduct} />
       <p class="caption" data-catalog-error role="status" hidden></p>
@@ -55,6 +55,7 @@ const area = business.serviceArea.join(' și ');
       <p class="sr-only" data-announcement aria-live="polite" aria-atomic="true"></p>
     </div>
     <p class="catalog-note caption page-width">{priceDisclaimer}</p>
+    <p class="catalog-note caption page-width">Pentru montaj în interior, verifică <a class="underline" href="/informatii/#montaj-interior">ce dimensiuni trebuie să ne trimiți</a>.</p>
     <noscript><p class="catalog-note caption page-width">Glisează lista sau folosește butoanele de model de mai sus. Catalogul rămâne accesibil fără JavaScript.</p></noscript>
   </section>
   <script>
